@@ -122,6 +122,8 @@ input:focus,select:focus,textarea:focus{outline:2px solid var(--ci-teal-light);b
 
 .ci-footer{border-top:.6pt solid var(--ci-teal);margin:26px 0 30px;padding-top:8px;color:var(--ink-mid);font-size:11px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px}
 .print-only{display:none}
+.print-opts{display:none;flex-wrap:wrap;gap:4px 16px;padding:4px 0 2px;font-size:.9rem}
+.print-opts span.on{font-weight:700}
 
 /* Druck / PDF */
 @media print{
@@ -132,10 +134,17 @@ input:focus,select:focus,textarea:focus{outline:2px solid var(--ci-teal-light);b
   .hero{padding:10px 0 2px}.hero h1{font-size:17pt}.hero p{display:none}
   .card{box-shadow:none;border:0;border-top:1px solid var(--line);border-radius:0;padding:8px 0;margin:4px 0;break-inside:avoid}
   .card h2{font-size:11.5pt;margin-bottom:6px}.card h2 .n{width:18px;height:18px;font-size:8pt}
-  .chip:not(:has(input:checked)){display:none}
-  .chips:not(:has(input:checked))::after{content:"–";color:var(--ink-mid)}
-  .chip span{border:0;padding:0;background:none!important;color:var(--ink)!important;font-weight:700}
-  .chip span::before{content:"☒ "}
+  .chips{gap:4px 16px}
+  .chip span{border:0;padding:0;background:none!important;color:var(--ink)!important;font-weight:400}
+  .chip span::before{content:"☐ ";font-size:1.15em}
+  .chip input:checked + span{font-weight:700}
+  .chip input:checked + span::before{content:"☒ "}
+  select{display:none!important}
+  .print-opts{display:flex!important}
+  #vorherBox{display:grid!important}
+  #liSteuer{opacity:1!important}
+  .result.empty,.result-detail.empty{display:none}
+  input[type=number]::-webkit-inner-spin-button{display:none}
   input,select,textarea{border:0!important;border-bottom:1px solid var(--line)!important;border-radius:0!important;padding:2px 0!important;min-height:0!important}
   select{appearance:none}
   .info{display:none}.info.keep{display:block}
@@ -278,7 +287,7 @@ input:focus,select:focus,textarea:focus{outline:2px solid var(--ci-teal-light);b
           <option value="Vertrag mit Bedingung">Vertrag mit aufschiebender/auflösender Bedingung unterschrieben</option>
           <option value="beauftragt">bereits fest beauftragt / begonnen</option>
         </select></div>
-      <div class="c2"><label class="f">Geplante Umsetzung</label><input type="month" name="umsetzung"></div>
+      <div class="c2"><label class="f">Geplante Umsetzung</label><input type="text" name="umsetzung" placeholder="MM/JJJJ"></div>
     </div>
   </section>
 
@@ -368,9 +377,10 @@ input:focus,select:focus,textarea:focus{outline:2px solid var(--ci-teal-light);b
     <div class="actions">
       <button class="btn primary" type="button" id="btnMail">Per E-Mail senden</button>
       <button class="btn" type="button" id="btnPdf">Als PDF speichern</button>
-      <button class="btn" type="button" id="btnLink">Vorausgefüllten Link kopieren</button>
+      <button class="btn" type="button" id="btnLink">Link kopieren</button>
+      <button class="btn" type="button" id="btnLinkMail">Link per E-Mail versenden</button>
     </div>
-    <div class="hint" style="margin-top:8px">„Per E-Mail senden" öffnet Ihr Mailprogramm mit allen Angaben im Text – Unterlagen und ggf. das PDF bitte als Anhang ergänzen. Für die beste PDF-Ausgabe Google Chrome verwenden.</div>
+    <div class="hint" style="margin-top:8px">„Per E-Mail senden“ schickt alle Angaben als Text an das Ingenieurbüro – Unterlagen bitte als Anhang ergänzen. „Link per E-Mail versenden“ erstellt eine Mail mit dem Formular-Link (mit Ihren bisherigen Eingaben) zur Weitergabe. Für die beste PDF-Ausgabe Google Chrome verwenden.</div>
     <div class="toast" id="toast"></div>
     <div class="hint" style="margin-top:10px">🔒 Ihre Eingaben werden nur lokal in Ihrem Browser gespeichert und nicht an Server übertragen.</div>
   </section>
@@ -386,6 +396,9 @@ input:focus,select:focus,textarea:focus{outline:2px solid var(--ci-teal-light);b
   const frm = document.getElementById('frm');
   const KEY = 'ik-heizung-abfrage-v1';
   const EMAIL = 'info@ing-kaufmann.de';
+  /* Öffentliche Adresse dieses Formulars. Wird genutzt, wenn die Datei lokal (file://) geöffnet ist,
+     damit Weitergabe-Links trotzdem funktionieren. Online gehostet wird automatisch die aktuelle Adresse verwendet. */
+  const FORM_URL = '';
   const YEAR = new Date().getFullYear();
   const $ = s => document.querySelector(s);
   const eur = n => n.toLocaleString('de-DE',{maximumFractionDigits:0}) + ' €';
@@ -463,6 +476,9 @@ input:focus,select:focus,textarea:focus{outline:2px solid var(--ci-teal-light);b
     }
     if(d.q_vorsteuer==='ja') detail += ' · bei Vorsteuerabzug zählen nur Nettokosten';
     $('#rZuschuss').textContent = zus;
+    const leer = !(d.selbst||d.altTyp);
+    document.querySelector('.result').classList.toggle('empty', leer);
+    $('#rDetail').classList.toggle('empty', leer);
     $('#rDetail').textContent = (d.selbst||d.altTyp) ? detail+'. Unverbindliche Orientierung.' : '';
 
     /* Hinweise */
@@ -479,6 +495,18 @@ input:focus,select:focus,textarea:focus{outline:2px solid var(--ci-teal-light);b
     $('#warnBox').classList.toggle('show', w.length>0);
   }
 
+  function printOpts(){
+    frm.querySelectorAll('select').forEach(s=>{
+      let box = s.nextElementSibling;
+      if(!box || !box.classList.contains('print-opts')){
+        box = document.createElement('div'); box.className='print-opts'; s.after(box);
+      }
+      box.innerHTML = [...s.options].filter(o=>o.value!=='' && o.text.trim()!=='').map(o=>
+        '<span class="'+(o.selected?'on':'')+'">'+(o.selected?'☒ ':'☐ ')+o.text+'</span>').join('');
+    });
+  }
+  window.addEventListener('beforeprint', printOpts);
+
   function update(){
     const d = collect();
     // Kostensumme
@@ -489,7 +517,7 @@ input:focus,select:focus,textarea:focus{outline:2px solid var(--ci-teal-light);b
     $('#liSteuer').style.opacity = (+d.einkommen>=1 && +d.einkommen<=4 && d.selbst!=='nein') ? 1 : .45;
     $('#sigTypedOut').textContent = d.sigTyped||'';
     togglePh();
-    progress(d); calc(d); save();
+    progress(d); calc(d); save(); printOpts();
   }
   frm.elements.kostenGesamt.addEventListener('input', e=>{ e.target.dataset.manual = e.target.value ? '1' : ''; });
   frm.addEventListener('input', update);
@@ -560,13 +588,35 @@ input:focus,select:focus,textarea:focus{outline:2px solid var(--ci-teal-light);b
     location.href = 'mailto:'+EMAIL+'?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(summary(d));
   };
   $('#btnPdf').onclick = ()=>window.print();
-  $('#btnLink').onclick = async ()=>{
+  function baseUrl(){
+    if(/^https?:/.test(location.protocol)) return location.href.split('#')[0];
+    return FORM_URL || '';
+  }
+  function shareUrl(){
+    const base = baseUrl();
+    if(!base) return '';
     const d = collect(); delete d.sigTyped;
-    const json = JSON.stringify(d);
-    const b64 = btoa(unescape(encodeURIComponent(json))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
-    const url = location.href.split('#')[0] + '#d=' + b64;
+    Object.keys(d).forEach(k=>{ if(d[k]===false || (Array.isArray(d[k]) && !d[k].length)) delete d[k]; });
+    const hasData = Object.keys(d).some(k=>Array.isArray(d[k]) ? d[k].length : (d[k]!==false && d[k]!==''));
+    if(!hasData) return base;
+    const b64 = btoa(unescape(encodeURIComponent(JSON.stringify(d)))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+    return base + '#d=' + b64;
+  }
+  const NO_URL = 'Dieses Formular ist nur lokal auf Ihrem Rechner geöffnet – ein Link wäre für den Empfänger nicht erreichbar. Bitte das Formular online bereitstellen (bzw. FORM_URL im Quelltext eintragen).';
+  $('#btnLink').onclick = async ()=>{
+    const url = shareUrl();
+    if(!url){ alert(NO_URL); return; }
     try{ await navigator.clipboard.writeText(url); toast('✓ Link kopiert – der Empfänger sieht das Formular vorausgefüllt.'); }
     catch(e){ toast('Link: '+url); }
+  };
+  $('#btnLinkMail').onclick = ()=>{
+    const url = shareUrl();
+    if(!url){ alert(NO_URL); return; }
+    const d = collect();
+    const anrede = d.nachname ? ('Guten Tag '+[d.anrede==='Frau'?'Frau':d.anrede==='Herr'?'Herr':'', d.nachname].filter(Boolean).join(' ')+',') : 'Guten Tag,';
+    const body = anrede+'\n\nbitte füllen Sie für die geplante Heizungsförderung (KfW 458) das folgende Abfrageformular aus:\n\n'+url+
+      '\n\nSie können es am Bildschirm ausfüllen und direkt per E-Mail an uns zurücksenden oder als PDF speichern. Die benötigten Unterlagen bitte als Anhang beifügen.\n\nViele Grüße\nChristian Kaufmann\nIngenieurbüro Kaufmann\n0162 / 72 22 043';
+    location.href = 'mailto:'+(d.email||'')+'?subject='+encodeURIComponent('Abfrage Heizungstausch – Ingenieurbüro Kaufmann')+'&body='+encodeURIComponent(body);
   };
   $('#btnReset').onclick = ()=>{
     if(!confirm('Alle Eingaben löschen?')) return;
@@ -587,7 +637,6 @@ input:focus,select:focus,textarea:focus{outline:2px solid var(--ci-teal-light);b
       $('#prefillBanner').classList.add('show');
     }catch(e){}
   }
-  if(!frm.elements.ortDatum.value) frm.elements.ortDatum.value = new Date().toLocaleDateString('de-DE');
   if(frm.elements.kostenGesamt.value && (+frm.elements.kostenHeizung.value + +frm.elements.kostenUmfeld.value) !== +frm.elements.kostenGesamt.value) frm.elements.kostenGesamt.dataset.manual='1';
   sizeCanvas(); update();
 })();
