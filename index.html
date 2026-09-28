@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Abfrage Heizungstausch – KfW 458 | Ingenieurbüro Kaufmann</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ci-blue:#024665;--ci-teal:#00ab84;--ci-blue-light:#3B7A9C;--ci-teal-light:#7DD4B8;
+  --ci-sand:#E8DFC8;--ci-coral:#E07A5F;--ink:#1F2A33;--ink-mid:#6B7680;--line:#D9DDE0;
+  --bg:#F7F8F9;--white:#fff;--radius:4px;--shadow:0 2px 8px rgba(2,70,101,.08);
+  --font:'Nunito Sans','Open Sans','Segoe UI',Arial,sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html{scroll-padding-top:calc(64px + env(safe-area-inset-top,0px))}
+body{margin:0;font-family:var(--font);color:var(--ink);background:var(--bg);line-height:1.5;font-size:15px;
+  padding-bottom:env(safe-area-inset-bottom,0px)}
+img{max-width:100%}
+.wrap{max-width:820px;margin:0 auto;padding:0 16px}
+
+/* Kopf */
+.ci-header{background:var(--white);border-bottom:1pt solid var(--ci-teal);padding-top:env(safe-area-inset-top,0px)}
+.ci-header .wrap{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:16px;padding-top:10px;padding-bottom:10px}
+.ci-logo{width:92px;height:56px;object-fit:cover;object-position:center}
+.ci-name{text-align:center}
+.ci-name strong{display:block;color:var(--ci-teal);font-weight:700;font-size:14px;letter-spacing:.02em}
+.ci-name span{display:block;font-size:12px}
+.ci-contact{text-align:right;font-style:normal;font-size:12px;line-height:1.45}
+.ci-contact .muted{color:#666}.ci-contact a{color:var(--ci-teal);text-decoration:none}
+@media (max-width:620px){.ci-header .wrap{grid-template-columns:auto 1fr}.ci-contact{display:none}.ci-name{text-align:left}}
+
+/* Titel */
+.hero{padding:28px 0 8px}
+.hero h1{margin:0;color:var(--ci-blue);font-size:1.9rem;font-weight:800;line-height:1.15}
+.hero p{margin:.5rem 0 0;color:var(--ink-mid);max-width:62ch}
+
+/* Fortschritt */
+.progress{position:sticky;top:0;z-index:5;background:var(--bg);padding:10px 0 12px;padding-top:calc(10px + env(safe-area-inset-top,0px))}
+.progress .bar{height:6px;background:var(--line);border-radius:3px;overflow:hidden}
+.progress .bar i{display:block;height:100%;width:0;background:var(--ci-teal);transition:width .25s}
+.progress .meta{display:flex;justify-content:space-between;font-size:12px;color:var(--ink-mid);margin-top:4px}
+
+/* Karten */
+.card{background:var(--white);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);margin:14px 0;padding:18px 20px}
+.card h2{display:flex;align-items:baseline;gap:10px;margin:0 0 12px;color:var(--ci-blue);font-size:1.15rem;font-weight:700}
+.card h2 .n{flex:none;display:inline-grid;place-items:center;width:26px;height:26px;border-radius:50%;background:var(--ci-blue);color:#fff;font-size:.8rem}
+.sub{font-weight:600;color:var(--ci-blue);font-size:.92rem;margin:14px 0 6px}
+.sub:first-of-type{margin-top:0}
+
+.grid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px 12px}
+.c2{grid-column:span 2}.c3{grid-column:span 3}.c4{grid-column:span 4}.c6{grid-column:span 6}
+@media (max-width:620px){.c2,.c3,.c4{grid-column:span 6}.c2.half{grid-column:span 3}}
+label.f{display:block;font-size:.8rem;color:var(--ink-mid);font-weight:600;margin-bottom:3px}
+label.f .req{color:var(--ci-coral)}
+input[type=text],input[type=email],input[type=tel],input[type=number],input[type=month],select,textarea{
+  width:100%;font:inherit;color:var(--ink);background:var(--white);border:1px solid var(--line);border-radius:var(--radius);padding:8px 10px;min-height:40px}
+textarea{min-height:70px;resize:vertical}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--ci-teal-light);border-color:var(--ci-teal)}
+.hint{font-size:.78rem;color:var(--ink-mid);margin-top:4px}
+
+/* Auswahl-Chips */
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{position:relative}
+.chip input{position:absolute;opacity:0;pointer-events:none}
+.chip span{display:inline-block;border:1px solid var(--line);background:var(--white);border-radius:20px;padding:6px 12px;font-size:.88rem;cursor:pointer;user-select:none;transition:.12s}
+.chip span:hover{border-color:var(--ci-blue-light)}
+.chip input:checked + span{background:var(--ci-blue);border-color:var(--ci-blue);color:#fff}
+.chip input:focus-visible + span{outline:2px solid var(--ci-teal)}
+
+/* Ja/Nein-Tabelle */
+.yn{width:100%;border-collapse:collapse}
+.yn td{padding:7px 0;border-bottom:1px solid var(--line);vertical-align:middle;font-size:.9rem}
+.yn tr:last-child td{border-bottom:0}
+.yn td:last-child{text-align:right;white-space:nowrap;padding-left:10px}
+.yn .chip span{padding:4px 12px}
+
+/* Info / Hinweis */
+.info{background:var(--bg);border-left:3px solid var(--ci-teal);padding:10px 14px;font-size:.88rem;border-radius:0 var(--radius) var(--radius) 0}
+.info ul{margin:4px 0 0;padding-left:18px}.info li{margin:2px 0}
+.warn{display:none;margin-top:12px;background:#fdf1ed;border-left:3px solid var(--ci-coral);padding:10px 14px;font-size:.88rem;border-radius:0 var(--radius) var(--radius) 0}
+.warn.show{display:block}.warn ul{margin:0;padding-left:18px}
+
+/* Förder-Ergebnis */
+.result{margin-top:14px;display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.result div{background:var(--bg);border-radius:var(--radius);padding:10px 12px}
+.result b{display:block;color:var(--ci-blue);font-size:1.35rem;font-weight:800;line-height:1.2}
+.result small{color:var(--ink-mid);font-size:.78rem}
+@media (max-width:620px){.result{grid-template-columns:1fr}}
+.result-detail{font-size:.8rem;color:var(--ink-mid);margin-top:6px}
+
+.sum{font-weight:700;color:var(--ci-blue)}
+
+/* Checkliste */
+.checks{list-style:none;margin:0;padding:0}
+.checks li{padding:5px 0;border-bottom:1px dashed var(--line);font-size:.9rem}
+.checks li:last-child{border-bottom:0}
+.checks label{display:flex;gap:10px;align-items:flex-start;cursor:pointer}
+.checks input{margin-top:3px;accent-color:var(--ci-teal);width:16px;height:16px;flex:none}
+.checks .opt{color:var(--ink-mid);font-size:.8rem}
+
+/* Unterschrift */
+.sig{border:1px dashed var(--ci-blue-light);border-radius:var(--radius);background:var(--white);position:relative}
+.sig canvas{display:block;width:100%;height:130px;touch-action:none;cursor:crosshair}
+.sig .ph{position:absolute;inset:0;display:grid;place-items:center;color:var(--ink-mid);font-size:.85rem;pointer-events:none}
+.sig-typed{font-family:'Segoe Script','Brush Script MT',cursive;font-size:1.6rem;color:var(--ci-blue)}
+
+/* Buttons */
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:6px}
+.btn{font:600 .95rem var(--font);border-radius:var(--radius);padding:10px 18px;cursor:pointer;border:1.5px solid var(--ci-blue);background:transparent;color:var(--ci-blue);min-height:42px}
+.btn.primary{background:var(--ci-teal);border-color:var(--ci-teal);color:#fff}
+.btn.primary:hover{background:#019170}
+.btn.small{padding:5px 12px;min-height:0;font-size:.82rem}
+.btn.link{border:0;padding:4px 0;color:var(--ink-mid);text-decoration:underline;font-weight:400}
+.toast{display:none;margin-top:10px;font-size:.85rem;color:var(--ci-teal);word-break:break-all}
+.toast.show{display:block}
+.banner{display:none;background:var(--ci-sand);padding:10px 14px;border-radius:var(--radius);font-size:.88rem;margin-top:10px}
+.banner.show{display:block}
+
+.ci-footer{border-top:.6pt solid var(--ci-teal);margin:26px 0 30px;padding-top:8px;color:var(--ink-mid);font-size:11px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px}
+.print-only{display:none}
+
+/* Druck / PDF */
+@media print{
+  @page{size:A4;margin:12mm 10mm 14mm 16mm}
+  body{background:#fff;font-size:10pt}
+  .no-print,.progress{display:none!important}
+  .print-only{display:block}
+  .hero{padding:10px 0 2px}.hero h1{font-size:17pt}.hero p{display:none}
+  .card{box-shadow:none;border:0;border-top:1px solid var(--line);border-radius:0;padding:8px 0;margin:4px 0;break-inside:avoid}
+  .card h2{font-size:11.5pt;margin-bottom:6px}.card h2 .n{width:18px;height:18px;font-size:8pt}
+  .chip:not(:has(input:checked)){display:none}
+  .chips:not(:has(input:checked))::after{content:"–";color:var(--ink-mid)}
+  .chip span{border:0;padding:0;background:none!important;color:var(--ink)!important;font-weight:700}
+  .chip span::before{content:"☒ "}
+  input,select,textarea{border:0!important;border-bottom:1px solid var(--line)!important;border-radius:0!important;padding:2px 0!important;min-height:0!important}
+  select{appearance:none}
+  .info{display:none}.info.keep{display:block}
+  .result div{background:#fff;border:1px solid var(--line)}
+  .wrap{max-width:none;padding:0}
+  .ci-header{padding-top:0}.ci-header .wrap{padding:0 0 6px}
+  .ci-contact{display:block!important}
+  .sig{border:0;border-bottom:1px solid var(--ink)}
+  .sig .ph{display:none}
+  a{color:inherit}
+  ::placeholder{color:transparent!important}
+  input[type=month]::-webkit-calendar-picker-indicator{display:none}
+}
+</style>
+</head>
+<body>
+
+<header class="ci-header">
+  <div class="wrap">
+    <img class="ci-logo" alt="Ingenieurbüro Kaufmann" src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAQDAwMDAgQDAwMEBAQFBgoGBgUFBgwICQcKDgwPDg4MDQ0PERYTDxAVEQ0NExoTFRcYGRkZDxIbHRsYHRYYGRj/2wBDAQQEBAYFBgsGBgsYEA0QGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBj/wAARCAGQAZADASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD7+ooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooqOSWOGNnkdUVRkljgAUCbS3H5peoqpZX1nqFkl5ZXMNxbycpNCwdG5xwR16VaHSgSaauhaKKKCgooooAKKKKACiiigAooooAKKKKACiiigAoopCQOpAoAQH14pfcGs6/1nSdKg87VNStLOMc755ljH6muatviv8PbzXItItfFVjNdzMI41Qlldj0AcDbn8arlZzVMXRptRnNJvu0jt6KByM0VJ0hRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFADewrE17xZ4d8L2X2nXtYtrFCMgSv8AM3+6vU/gK2mIUjnNfJHxr0fVtb/aDvrLR9Nur+4Ntb4jt4y5X5PboPrWkIqTszws/wA0q5dhlVow5pNpJet/8jtPFX7TNpF5lt4P0drlugvL7KR/UIOT+JWvE/Evj/xb4vmZte1q4nhY8WyHy4R9Ixwfxya9K8Kfs2+IdQK3Hiq/h0iE8m3gxNMfq33V/WvZdE+Hnw4+HtmL8WlnbyR8tqWpShnX3DNwv4YrbmhDbU+JeXZ5nHv42p7Kn22/BfqzmvhB8QPDNn4J0nwhql2+k6vbQhPs2oIYPNySQ0ZPBBz9a9kDqRnNc5dab4R8e+GYprmzsNZ02dd0MjIGBGcZU9R06iubj8A+JPC3z+AfFEyWo6aPrO65tseiSffj/wDHqxdmfcYT6zhKUYNKpBJWcdHb0bs/VP5HpAxtwR+tLkHg1wlv8QTp0otPHGiXPhyXOBdu3n2Tn2nXhfpIErt0dJUEiMGVhkEHIIqWrHp0MRCtfke3TZr1T1RMBikPSjpVe5ure1hae5njhiUZZ5GC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yhG//gT/AOAzqM9gKWvO7v40eBI5Tb6ZqFzrVyP+WGlWslyT+KjH61XHj3x5q2f+Ed+GGoJGek+s3MdmB77PmajlZpLNcMnaMuZ/3U3+Vz0vPpSMygcsB9a80XSfjNq4/wBN8UaFoEZ/h06za5cD/elOM/hTx8H7W/O7xV4v8S69n70M16YYW/4BHt/nRZdxfXK8/wCFRf8A280l+r/A6nV/HHhLQgy6x4k0yzcfwTXChv8AvnOa5d/jP4dunKeGtJ17xC3TOnafIUz/AL7bRW7pPw08CaGwbTPCulxOOkrwiST/AL7bJrqEijRAqIqgcAAYo0Dkxs95Rj6Jt/e7L8Dzf/hJ/izq/wAukeAbHSIz0n1m/DH/AL9xAn9aVfCPxP1XJ1z4jJp8Z6waLYLH/wCRJNxr0sZ9P1oNLmH/AGdzfxqkpfO35WPN4vgt4TmkE2vz6x4glHIbVb+SUZ/3QQP0rrNI8JeGdCQDRtB06wI7wW6ofzxmtulIPYkUOTZtSy/DUneEEn3tr9+4gRR0AFOooqTrskFFFFAwooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKAKGp6bYaxpU2m6nbR3NpcIUkhkGQwNchp3wd+Gul3Alt/CllK4OQbrdcY+nmEiu8wT7UHkcmqu0c1XCUaslOpBNrq0mVrSxs7G3ENpaQW8S9EijCj8hVocDijApegpG0YxirRCiiikWFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQB//9k=">
+    <div class="ci-name"><strong>INGENIEURBÜRO KAUFMANN</strong><span>TGA-Planung · Energieberatung · Wärmekonzepte</span></div>
+    <address class="ci-contact">
+      <span class="muted">Ringstraße 10A · 97903 Collenberg</span><br>
+      <a href="mailto:info@ing-kaufmann.de">info@ing-kaufmann.de</a><br>
+      <a href="tel:+491627222043" style="color:#666">0162 / 72 22 043</a>
+    </address>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <h1>Abfrage Heizungstausch</h1>
+    <p>Förderung KfW 458 (BEG EM) – bitte ausfüllen, als PDF speichern oder direkt per E-Mail senden. Die wichtigsten Regeln stehen unten in Kurzform, alles Weitere klären wir persönlich.</p>
+    <div class="banner no-print" id="prefillBanner">Dieses Formular wurde vorausgefüllt – bitte Angaben prüfen und ergänzen.</div>
+  </section>
+
+  <div class="progress no-print">
+    <div class="bar"><i id="progBar"></i></div>
+    <div class="meta"><span id="progTxt">0 % der Pflichtangaben</span><button class="btn link" type="button" id="btnReset">Formular leeren</button></div>
+  </div>
+
+  <form id="frm" autocomplete="on" onsubmit="return false">
+
+  <!-- 1 Antragsteller -->
+  <section class="card">
+    <h2><span class="n">1</span>Antragsteller (Eigentümer laut Grundbuch)</h2>
+    <div class="grid">
+      <div class="c2 half"><label class="f">Anrede</label>
+        <select name="anrede"><option value=""></option><option>Frau</option><option>Herr</option><option>Firma / WEG</option></select></div>
+      <div class="c2 half"><label class="f">Vorname <span class="req">*</span></label><input type="text" name="vorname" required autocomplete="given-name"></div>
+      <div class="c2"><label class="f">Nachname <span class="req">*</span></label><input type="text" name="nachname" required autocomplete="family-name"></div>
+      <div class="c3"><label class="f">Straße / Nr. <span class="req">*</span></label><input type="text" name="strasse" required autocomplete="street-address"></div>
+      <div class="c3"><label class="f">PLZ / Ort <span class="req">*</span></label><input type="text" name="ort" required></div>
+      <div class="c3"><label class="f">Telefon <span class="req">*</span></label><input type="tel" name="tel" required autocomplete="tel"></div>
+      <div class="c3"><label class="f">E-Mail <span class="req">*</span></label><input type="email" name="email" required autocomplete="email"></div>
+      <div class="c6"><label class="f">Eigentumsverhältnis <span class="req">*</span></label>
+        <div class="chips" data-req="art">
+          <label class="chip"><input type="radio" name="art" value="EFH selbstgenutzt"><span>EFH, selbst bewohnt</span></label>
+          <label class="chip"><input type="radio" name="art" value="EFH/ETW vermietet"><span>EFH / Wohnung vermietet</span></label>
+          <label class="chip"><input type="radio" name="art" value="Eigentumswohnung"><span>Eigentumswohnung</span></label>
+          <label class="chip"><input type="radio" name="art" value="MFH (Alleineigentum)"><span>Mehrfamilienhaus</span></label>
+          <label class="chip"><input type="radio" name="art" value="WEG"><span>WEG (Gemeinschaftseigentum)</span></label>
+        </div></div>
+    </div>
+  </section>
+
+  <!-- 2 Objekt -->
+  <section class="card">
+    <h2><span class="n">2</span>Gebäude</h2>
+    <div class="grid">
+      <div class="c3"><label class="f">Objektadresse <span style="font-weight:400">(falls abweichend)</span></label><input type="text" name="objAdresse" placeholder="Straße, Nr., PLZ Ort"></div>
+      <div class="c3"><label class="f">Baujahr Gebäude <span class="req">*</span></label><input type="number" name="baujahr" min="1500" max="2100" required></div>
+      <div class="c3"><label class="f">Wohneinheiten gesamt <span class="req">*</span></label><input type="number" name="weGesamt" min="1" required></div>
+      <div class="c3"><label class="f">davon an neue Heizung</label><input type="number" name="weBetroffen" min="1" placeholder="= alle"></div>
+    </div>
+    <div class="sub" style="margin-top:14px">Sonderfälle</div>
+    <table class="yn">
+      <tr><td>Anschluss- und Benutzungszwang für ein Wärmenetz?</td><td>
+        <span class="chips"><label class="chip"><input type="radio" name="q_netz" value="ja"><span>Ja</span></label><label class="chip"><input type="radio" name="q_netz" value="nein"><span>Nein</span></label></span></td></tr>
+      <tr><td>Beheizt die neue Anlage mehrere Gebäude?</td><td>
+        <span class="chips"><label class="chip"><input type="radio" name="q_mehrgeb" value="ja"><span>Ja</span></label><label class="chip"><input type="radio" name="q_mehrgeb" value="nein"><span>Nein</span></label></span></td></tr>
+      <tr><td>Vorsteuerabzugsberechtigt?</td><td>
+        <span class="chips"><label class="chip"><input type="radio" name="q_vorsteuer" value="ja"><span>Ja</span></label><label class="chip"><input type="radio" name="q_vorsteuer" value="nein"><span>Nein</span></label></span></td></tr>
+      <tr><td>Schon einmal KfW 458 für diese Wohneinheit beantragt?</td><td>
+        <span class="chips"><label class="chip"><input type="radio" name="q_vorher" value="ja"><span>Ja</span></label><label class="chip"><input type="radio" name="q_vorher" value="nein"><span>Nein</span></label></span></td></tr>
+    </table>
+    <div class="grid" id="vorherBox" style="display:none;margin-top:8px">
+      <div class="c3"><label class="f">Bereits erhaltene Förderung (€)</label><input type="number" name="vorherBetrag" min="0"></div>
+    </div>
+  </section>
+
+  <!-- 3 Bestehende Heizung -->
+  <section class="card">
+    <h2><span class="n">3</span>Bestehende Heizung</h2>
+    <div class="sub">Energieträger <span class="req" style="color:var(--ci-coral)">*</span></div>
+    <div class="chips" data-req="altTyp">
+      <label class="chip"><input type="radio" name="altTyp" value="oel"><span>Öl</span></label>
+      <label class="chip"><input type="radio" name="altTyp" value="gas"><span>Gas-Zentralheizung</span></label>
+      <label class="chip"><input type="radio" name="altTyp" value="gasetage"><span>Gasetagenheizung</span></label>
+      <label class="chip"><input type="radio" name="altTyp" value="nachtspeicher"><span>Nachtspeicher / Elektro</span></label>
+      <label class="chip"><input type="radio" name="altTyp" value="kohle"><span>Kohle</span></label>
+      <label class="chip"><input type="radio" name="altTyp" value="biomasse"><span>Holz / Pellets</span></label>
+      <label class="chip"><input type="radio" name="altTyp" value="sonstige"><span>Sonstige</span></label>
+    </div>
+    <div class="grid" style="margin-top:12px">
+      <div class="c2 half"><label class="f">Baujahr der Heizung</label><input type="number" name="altBaujahr" min="1950" max="2100" placeholder="lt. Typenschild"></div>
+      <div class="c2 half"><label class="f">Noch funktionstüchtig?</label>
+        <select name="altFunktion"><option value=""></option><option value="ja">Ja</option><option value="nein">Nein, defekt</option></select></div>
+      <div class="c2"><label class="f">Verbrauch pro Jahr</label><input type="text" name="verbrauch" placeholder="z. B. 2.400 l / 22.000 kWh"></div>
+      <div class="c3"><label class="f">Heizflächen</label>
+        <select name="heizflaechen"><option value=""></option><option>Heizkörper</option><option>Fußbodenheizung</option><option>Heizkörper + Fußbodenheizung</option></select></div>
+      <div class="c3"><label class="f">Warmwasser</label>
+        <select name="warmwasser"><option value=""></option><option>über die Heizung (zentral)</option><option>dezentral (Durchlauferhitzer/Boiler)</option></select></div>
+    </div>
+  </section>
+
+  <!-- 4 Neue Heizung -->
+  <section class="card">
+    <h2><span class="n">4</span>Geplante Heizung</h2>
+    <div class="sub">Art (Mehrfachauswahl) <span style="color:var(--ci-coral)">*</span></div>
+    <div class="chips" data-req="neu">
+      <label class="chip"><input type="checkbox" name="neu" value="WP Luft/Wasser"><span>Wärmepumpe Luft/Wasser</span></label>
+      <label class="chip"><input type="checkbox" name="neu" value="WP Sole/Wasser"><span>Wärmepumpe Erdwärme</span></label>
+      <label class="chip"><input type="checkbox" name="neu" value="WP Wasser/Wasser"><span>Wärmepumpe Grundwasser</span></label>
+      <label class="chip"><input type="checkbox" name="neu" value="WP Luft/Luft"><span>Luft-Luft-Wärmepumpe</span></label>
+      <label class="chip"><input type="checkbox" name="neu" value="Pellet"><span>Pelletheizung</span></label>
+      <label class="chip"><input type="checkbox" name="neu" value="Scheitholz/Kombi"><span>Scheitholz / Kombikessel</span></label>
+      <label class="chip"><input type="checkbox" name="neu" value="Hackschnitzel"><span>Hackschnitzel</span></label>
+      <label class="chip"><input type="checkbox" name="neu" value="Solarthermie"><span>Solarthermie</span></label>
+      <label class="chip"><input type="checkbox" name="neu" value="Wärmenetz"><span>Anschluss Wärmenetz</span></label>
+      <label class="chip"><input type="checkbox" name="neu" value="Sonstige"><span>Sonstige</span></label>
+    </div>
+    <div class="grid" style="margin-top:12px">
+      <div class="c3"><label class="f">Hersteller / Modell</label><input type="text" name="modell" placeholder="lt. Angebot"></div>
+      <div class="c3"><label class="f">Fachbetrieb</label><input type="text" name="fachbetrieb"></div>
+      <div class="c4"><label class="f">Stand der Beauftragung</label>
+        <select name="stand"><option value=""></option>
+          <option value="kein Angebot">noch kein Angebot</option>
+          <option value="Angebot liegt vor">Angebot liegt vor</option>
+          <option value="Vertrag mit Bedingung">Vertrag mit aufschiebender/auflösender Bedingung unterschrieben</option>
+          <option value="beauftragt">bereits fest beauftragt / begonnen</option>
+        </select></div>
+      <div class="c2"><label class="f">Geplante Umsetzung</label><input type="month" name="umsetzung"></div>
+    </div>
+  </section>
+
+  <!-- 5 Kosten & Förderung -->
+  <section class="card">
+    <h2><span class="n">5</span>Kosten &amp; Förderung</h2>
+    <div class="grid">
+      <div class="c2"><label class="f">Heizung inkl. Einbau (€ brutto)</label><input type="number" name="kostenHeizung" min="0" step="100"></div>
+      <div class="c2"><label class="f">Umfeldmaßnahmen (€ brutto)</label><input type="number" name="kostenUmfeld" min="0" step="100"></div>
+      <div class="c2"><label class="f">Gesamt (€ brutto) <span class="req">*</span></label><input type="number" name="kostenGesamt" min="0" step="100" required></div>
+    </div>
+    <div class="hint">Umfeldmaßnahmen: z. B. Demontage Altanlage, Heizkörper, Pufferspeicher, hydraulischer Abgleich, Elektro, Durchbrüche.</div>
+
+    <div class="sub" style="margin-top:16px">Angaben für die Boni</div>
+    <div class="grid">
+      <div class="c3"><label class="f">Selbst bewohnt (Hauptwohnsitz)? <span class="req">*</span></label>
+        <select name="selbst" required><option value=""></option><option value="ja">Ja</option><option value="teilweise">Ja, eine WE – weitere vermietet</option><option value="nein">Nein, vermietet</option></select></div>
+      <div class="c3"><label class="f">Zu versteuerndes Haushaltseinkommen</label>
+        <select name="einkommen"><option value=""></option>
+          <option value="1">bis 30.000 €</option><option value="2">30.001 – 40.000 €</option>
+          <option value="3">40.001 – 50.000 €</option><option value="4">50.001 – 60.000 €</option>
+          <option value="5">über 60.000 €</option><option value="0">keine Angabe</option></select>
+        <div class="hint">Ø der Steuerbescheide aus dem 2. und 3. Jahr vor Antrag</div></div>
+      <div class="c3"><label class="f">Minderjährige Kinder im Haushalt</label><input type="number" name="kinder" min="0" placeholder="0"></div>
+    </div>
+
+    <div class="result" aria-live="polite">
+      <div><b id="rSatz">–</b><small>Fördersatz (Schätzung)</small></div>
+      <div><b id="rDeckel">–</b><small>förderfähige Höchstkosten</small></div>
+      <div><b id="rZuschuss">–</b><small>voraussichtlicher Zuschuss</small></div>
+    </div>
+    <div class="result-detail" id="rDetail"></div>
+
+    <div class="warn" id="warnBox"><ul id="warnList"></ul></div>
+  </section>
+
+  <!-- 6 Unterlagen -->
+  <section class="card">
+    <h2><span class="n">6</span>Unterlagen</h2>
+    <div class="info keep" style="margin-bottom:10px"><b>Bitte fügen Sie die folgenden Unterlagen bei</b> – als Anhang zur E-Mail oder zusammen mit dem ausgedruckten Formular. Haken Sie ab, was Sie mitschicken.</div>
+    <ul class="checks">
+      <li><label><input type="checkbox" name="u_angebot"><span>Angebot(e) des Fachbetriebs</span></label></li>
+      <li><label><input type="checkbox" name="u_vertrag"><span>Liefer-/Leistungsvertrag mit aufschiebender oder auflösender Bedingung und Ausführungsdatum</span></label></li>
+      <li><label><input type="checkbox" name="u_grundbuch"><span>Grundbuchauszug</span></label></li>
+      <li><label><input type="checkbox" name="u_plaene"><span>Gebäudepläne (Grundrisse, Schnitte, Ansichten)</span></label></li>
+      <li><label><input type="checkbox" name="u_melde"><span>Meldebescheinigung (mind. ein Eigentümer im Haus gemeldet) <span class="opt">– nur bei Boni</span></span></label></li>
+      <li id="liSteuer"><label><input type="checkbox" name="u_steuer"><span>Einkommensteuerbescheide 2. + 3. Jahr vor Antrag <span class="opt">– nur bei Einkommensbonus</span></span></label></li>
+      <li><label><input type="checkbox" name="u_typenschild"><span>Foto Typenschild der alten Heizung <span class="opt">– für den Klimabonus</span></span></label></li>
+    </ul>
+  </section>
+
+  <!-- 7 Wichtig -->
+  <section class="card">
+    <h2><span class="n">7</span>Wichtig in Kürze</h2>
+    <div class="info keep">
+      <ul>
+        <li><b>Erst Antrag, dann Auftrag:</b> Vor der Förderzusage nur einen Vertrag <i>mit Bedingung</i> unterschreiben – sonst entfällt die Förderung.</li>
+        <li><b>Antrag stellen Sie selbst</b> im KfW-Portal – wir liefern Ihnen dafür die Bestätigung zum Antrag (BzA).</li>
+        <li><b>Auszahlung erst nach Abschluss</b> und Bezahlung aller Rechnungen – Zwischenfinanzierung einplanen.</li>
+        <li><b>Nie bar zahlen</b> – nur Überweisung/Karte, Belege aufheben.</li>
+        <li><b>Fristen:</b> Umsetzung innerhalb 36 Monaten nach Zusage, Auszahlungsantrag bis 6 Monate nach letzter Rechnung.</li>
+      </ul>
+    </div>
+    <div style="margin-top:12px"><label class="f">Anmerkungen</label>
+      <textarea name="anmerkungen" placeholder="z. B. enge Aufstellsituation, Hybrid geplant, Heizung defekt, Wunschtermin …"></textarea></div>
+  </section>
+
+  <!-- 8 Unterschrift -->
+  <section class="card">
+    <h2><span class="n">8</span>Ort, Datum &amp; Unterschrift</h2>
+    <div class="grid">
+      <div class="c3"><label class="f">Ort, Datum</label><input type="text" name="ortDatum" id="ortDatum"></div>
+      <div class="c3 no-print"><label class="f">oder Namen tippen</label><input type="text" name="sigTyped" id="sigTyped" placeholder="Vor- und Nachname"></div>
+      <div class="c6">
+        <div class="sig"><canvas id="sigCanvas"></canvas><div class="ph" id="sigPh">Hier mit Maus oder Finger unterschreiben</div>
+          <div id="sigTypedOut" class="sig-typed" style="position:absolute;left:16px;bottom:18px"></div></div>
+        <button type="button" class="btn link no-print" id="sigClear">Unterschrift löschen</button>
+      </div>
+    </div>
+  </section>
+
+  </form>
+
+  <!-- Absenden -->
+  <section class="card no-print">
+    <h2>Absenden</h2>
+    <div class="actions">
+      <button class="btn primary" type="button" id="btnMail">Per E-Mail senden</button>
+      <button class="btn" type="button" id="btnPdf">Als PDF speichern</button>
+      <button class="btn" type="button" id="btnLink">Vorausgefüllten Link kopieren</button>
+    </div>
+    <div class="hint" style="margin-top:8px">„Per E-Mail senden" öffnet Ihr Mailprogramm mit allen Angaben im Text – Unterlagen und ggf. das PDF bitte als Anhang ergänzen. Für die beste PDF-Ausgabe Google Chrome verwenden.</div>
+    <div class="toast" id="toast"></div>
+    <div class="hint" style="margin-top:10px">🔒 Ihre Eingaben werden nur lokal in Ihrem Browser gespeichert und nicht an Server übertragen.</div>
+  </section>
+
+  <footer class="ci-footer">
+    <span>Ingenieurbüro Kaufmann · Ringstraße 10A · 97903 Collenberg · info@ing-kaufmann.de · 0162 / 72 22 043</span>
+    <span>Stand: 09/2026 · Angaben ohne Gewähr</span>
+  </footer>
+</main>
+
+<script>
+(function(){
+  const frm = document.getElementById('frm');
+  const KEY = 'ik-heizung-abfrage-v1';
+  const EMAIL = 'info@ing-kaufmann.de';
+  const YEAR = new Date().getFullYear();
+  const $ = s => document.querySelector(s);
+  const eur = n => n.toLocaleString('de-DE',{maximumFractionDigits:0}) + ' €';
+
+  /* ---------- Serialisierung ---------- */
+  function collect(){
+    const d = {};
+    frm.querySelectorAll('input,select,textarea').forEach(el=>{
+      if(!el.name) return;
+      if(el.type==='radio'){ if(el.checked) d[el.name]=el.value; }
+      else if(el.type==='checkbox'){
+        if(el.name==='neu'){ d.neu = d.neu||[]; if(el.checked) d.neu.push(el.value); }
+        else d[el.name]=el.checked;
+      } else if(el.value!=='') d[el.name]=el.value;
+    });
+    return d;
+  }
+  function apply(d){
+    frm.querySelectorAll('input,select,textarea').forEach(el=>{
+      if(!el.name || !(el.name in d)) return;
+      const v = d[el.name];
+      if(el.type==='radio') el.checked = (el.value===v);
+      else if(el.type==='checkbox') el.checked = Array.isArray(v) ? v.includes(el.value) : !!v;
+      else el.value = v;
+    });
+  }
+  function save(){ try{ localStorage.setItem(KEY, JSON.stringify(collect())); }catch(e){} }
+  function load(){ try{ const s=localStorage.getItem(KEY); if(s) apply(JSON.parse(s)); }catch(e){} }
+
+  /* ---------- Fortschritt ---------- */
+  function progress(d){
+    const req = ['vorname','nachname','strasse','ort','tel','email','art','baujahr','weGesamt','altTyp','selbst','kostenGesamt'];
+    let ok = req.filter(k=>d[k]).length + ((d.neu&&d.neu.length)?1:0);
+    const p = Math.round(ok/(req.length+1)*100);
+    $('#progBar').style.width = p+'%';
+    $('#progTxt').textContent = p+' % der Pflichtangaben';
+  }
+
+  /* ---------- Förderlogik (Stand ab 21.07.2026) ---------- */
+  function calc(d){
+    const weGes = +d.weGesamt||0;
+    const n = +d.weBetroffen || weGes || 0;
+    const selbst = d.selbst==='ja' || d.selbst==='teilweise';
+    const altBj = +d.altBaujahr||0, alter = altBj ? YEAR-altBj : 0;
+    const funkt = d.altFunktion==='ja';
+    let kgb = 0, kgbTxt = '';
+    if(selbst && funkt){
+      if(['oel','kohle','gasetage','nachtspeicher'].includes(d.altTyp)) kgb=16;
+      else if(['gas','biomasse'].includes(d.altTyp) && alter>=20) kgb=16;
+    }
+    let ek = 0, stufe = +d.einkommen||0;
+    if(selbst && stufe){
+      if((+d.kinder||0)>0 && stufe>1) stufe -= 1;   // Familienzuschlag −10.000 €
+      ek = {1:40,2:30,3:10}[stufe]||0;
+    }
+    const satz = Math.min(30+kgb+ek, 80);
+    let deckel = 0;
+    if(n>0) deckel = 28000 + 15000*Math.min(Math.max(n-1,0),5) + 8000*Math.max(n-6,0);
+    const kosten = +d.kostenGesamt||0;
+
+    $('#rSatz').textContent = (d.selbst||d.altTyp) ? satz+' %' : '–';
+    $('#rDeckel').textContent = deckel ? eur(deckel) : '–';
+    let detail = 'Grundförderung 30 %';
+    if(kgb) detail += ' + Klimageschwindigkeitsbonus 16 %';
+    if(ek) detail += ' + Einkommensbonus '+ek+' %';
+    if(30+kgb+ek>80) detail += ' → gedeckelt auf 80 %';
+    let zus = '–';
+    if(kosten && deckel){
+      const basis = Math.min(kosten, deckel);
+      if(n<=1){ zus = eur(basis*satz/100); }
+      else {
+        zus = eur(basis*0.30) + (kgb||ek ? ' +' : '');
+        if(kgb||ek) detail += ' · bei mehreren WE gelten Boni nur für die selbst bewohnte Einheit (Zusatzantrag) – Grundförderung angezeigt, Boni kommen hinzu';
+      }
+    }
+    if(d.q_vorsteuer==='ja') detail += ' · bei Vorsteuerabzug zählen nur Nettokosten';
+    $('#rZuschuss').textContent = zus;
+    $('#rDetail').textContent = (d.selbst||d.altTyp) ? detail+'. Unverbindliche Orientierung.' : '';
+
+    /* Hinweise */
+    const w = [];
+    if(+d.baujahr && YEAR - (+d.baujahr) < 5) w.push('Das Gebäude ist jünger als 5 Jahre – für KfW 458 muss der Bauantrag mindestens 5 Jahre zurückliegen.');
+    if(d.stand==='beauftragt') w.push('Bereits fest beauftragt oder begonnen? Dann ist eine Förderung in der Regel ausgeschlossen – bitte rufen Sie uns vorher an.');
+    if(d.q_netz==='ja') w.push('Bei Anschluss- und Benutzungszwang wird nur der Wärmenetzanschluss gefördert, keine eigene Heizung.');
+    if(d.q_mehrgeb==='ja') w.push('Mehrere Gebäude an einer Anlage = Gebäudenetz – zuständig ist dann das BAFA, nicht die KfW. Wir prüfen die günstigere Route.');
+    if(d.q_vorher==='ja') w.push('Früherer KfW-458-Antrag: Der Kostendeckel gilt einmalig je Wohneinheit – bereits genutzte Beträge stehen nicht erneut zur Verfügung.');
+    if(d.selbst==='nein' && (d.einkommen||+d.kinder)) w.push('Bei Vermietung gibt es keine Boni – nur die Grundförderung von 30 %.');
+    if(selbst && d.altFunktion==='nein') w.push('Die Heizung ist defekt: Der Klimageschwindigkeitsbonus setzt eine funktionstüchtige Altanlage voraus. Auch im Notfall muss der Antrag vor dem Einbau gestellt werden – eine Übergangslösung (z. B. mobile Heizung) ist zulässig.');
+    if(selbst && ['gas','biomasse'].includes(d.altTyp) && altBj && alter<20) w.push('Gas- bzw. Biomasseheizungen sind erst ab 20 Jahren Alter bonusfähig (Klimageschwindigkeitsbonus).');
+    $('#warnList').innerHTML = w.map(x=>'<li>'+x+'</li>').join('');
+    $('#warnBox').classList.toggle('show', w.length>0);
+  }
+
+  function update(){
+    const d = collect();
+    // Kostensumme
+    const h=+d.kostenHeizung||0, u=+d.kostenUmfeld||0;
+    const g = frm.elements.kostenGesamt;
+    if((h||u) && !g.dataset.manual){ g.value = h+u; d.kostenGesamt = String(h+u); }
+    $('#vorherBox').style.display = d.q_vorher==='ja' ? '' : 'none';
+    $('#liSteuer').style.opacity = (+d.einkommen>=1 && +d.einkommen<=4 && d.selbst!=='nein') ? 1 : .45;
+    $('#sigTypedOut').textContent = d.sigTyped||'';
+    togglePh();
+    progress(d); calc(d); save();
+  }
+  frm.elements.kostenGesamt.addEventListener('input', e=>{ e.target.dataset.manual = e.target.value ? '1' : ''; });
+  frm.addEventListener('input', update);
+  frm.addEventListener('change', update);
+
+  /* ---------- Unterschrift ---------- */
+  const cv = $('#sigCanvas'), ctx = cv.getContext('2d');
+  let drawing=false, hasInk=false;
+  function sizeCanvas(){
+    const r = cv.getBoundingClientRect(), dpr = window.devicePixelRatio||1;
+    const img = hasInk ? cv.toDataURL() : null;
+    cv.width = r.width*dpr; cv.height = r.height*dpr; ctx.scale(dpr,dpr);
+    ctx.lineWidth=2; ctx.lineCap='round'; ctx.strokeStyle='#024665';
+    if(img){ const i=new Image(); i.onload=()=>ctx.drawImage(i,0,0,r.width,r.height); i.src=img; }
+  }
+  function pos(e){ const r=cv.getBoundingClientRect(); return [e.clientX-r.left, e.clientY-r.top]; }
+  cv.addEventListener('pointerdown', e=>{ drawing=true; hasInk=true; cv.setPointerCapture(e.pointerId); const [x,y]=pos(e); ctx.beginPath(); ctx.moveTo(x,y); togglePh(); });
+  cv.addEventListener('pointermove', e=>{ if(!drawing) return; const [x,y]=pos(e); ctx.lineTo(x,y); ctx.stroke(); });
+  ['pointerup','pointercancel'].forEach(t=>cv.addEventListener(t,()=>drawing=false));
+  $('#sigClear').onclick = ()=>{ ctx.clearRect(0,0,cv.width,cv.height); hasInk=false; frm.elements.sigTyped.value=''; update(); };
+  function togglePh(){ $('#sigPh').style.display = (hasInk || frm.elements.sigTyped.value) ? 'none' : ''; }
+  window.addEventListener('resize', sizeCanvas);
+
+  /* ---------- Textzusammenfassung ---------- */
+  const labels = {oel:'Öl',gas:'Gas-Zentralheizung',gasetage:'Gasetagenheizung',nachtspeicher:'Nachtspeicher/Elektro',kohle:'Kohle',biomasse:'Holz/Pellets',sonstige:'Sonstige'};
+  const selbstL = {ja:'Ja',teilweise:'Ja, eine WE (weitere vermietet)',nein:'Nein, vermietet'};
+  const ekL = {1:'bis 30.000 €',2:'30.001–40.000 €',3:'40.001–50.000 €',4:'50.001–60.000 €',5:'über 60.000 €',0:'keine Angabe'};
+  function summary(d){
+    const L = [];
+    const add = (k,v)=>{ if(v!==undefined && v!=='' && v!==null) L.push(k+': '+v); };
+    L.push('ABFRAGE HEIZUNGSTAUSCH – KfW 458','');
+    L.push('1) ANTRAGSTELLER');
+    add('Name', [d.anrede,d.vorname,d.nachname].filter(Boolean).join(' '));
+    add('Adresse', [d.strasse,d.ort].filter(Boolean).join(', '));
+    add('Telefon', d.tel); add('E-Mail', d.email); add('Eigentum', d.art);
+    L.push('','2) GEBÄUDE');
+    add('Objekt', d.objAdresse||'wie oben'); add('Baujahr', d.baujahr);
+    add('WE gesamt / betroffen', (d.weGesamt||'?')+' / '+(d.weBetroffen||d.weGesamt||'?'));
+    const q = {q_netz:'Wärmenetz-Anschlusszwang',q_mehrgeb:'Mehrere Gebäude',q_vorsteuer:'Vorsteuerabzug',q_vorher:'Früherer 458-Antrag'};
+    Object.keys(q).forEach(k=>add(q[k], d[k]));
+    if(d.q_vorher==='ja') add('Bereits erhalten', d.vorherBetrag && eur(+d.vorherBetrag));
+    L.push('','3) BESTEHENDE HEIZUNG');
+    add('Energieträger', labels[d.altTyp]); add('Baujahr', d.altBaujahr);
+    add('Funktionstüchtig', d.altFunktion); add('Verbrauch/Jahr', d.verbrauch);
+    add('Heizflächen', d.heizflaechen); add('Warmwasser', d.warmwasser);
+    L.push('','4) GEPLANTE HEIZUNG');
+    add('Art', (d.neu||[]).join(', ')); add('Hersteller/Modell', d.modell);
+    add('Fachbetrieb', d.fachbetrieb); add('Stand', d.stand); add('Umsetzung', d.umsetzung);
+    L.push('','5) KOSTEN & BONI');
+    add('Heizung inkl. Einbau', d.kostenHeizung && eur(+d.kostenHeizung));
+    add('Umfeldmaßnahmen', d.kostenUmfeld && eur(+d.kostenUmfeld));
+    add('Gesamt', d.kostenGesamt && eur(+d.kostenGesamt));
+    add('Selbst bewohnt', selbstL[d.selbst]); add('Einkommen', ekL[d.einkommen]); add('Kinder', d.kinder);
+    add('Schätzung', $('#rSatz').textContent+' · Deckel '+$('#rDeckel').textContent+' · Zuschuss '+$('#rZuschuss').textContent);
+    const u = {u_angebot:'Angebot',u_vertrag:'Vertrag mit Bedingung',u_grundbuch:'Grundbuchauszug',u_plaene:'Gebäudepläne',u_melde:'Meldebescheinigung',u_steuer:'Steuerbescheide',u_typenschild:'Foto Typenschild'};
+    L.push('','6) UNTERLAGEN (bitte als Anhang beifügen)');
+    add('Beigefügt', Object.keys(u).filter(k=>d[k]).map(k=>u[k]).join(', ')||'–');
+    if(d.anmerkungen){ L.push('','ANMERKUNGEN', d.anmerkungen); }
+    L.push('', (d.ortDatum||'') + (d.sigTyped ? ' – '+d.sigTyped : ''));
+    return L.join('\n');
+  }
+
+  /* ---------- Aktionen ---------- */
+  function toast(t){ const el=$('#toast'); el.textContent=t; el.classList.add('show'); setTimeout(()=>el.classList.remove('show'),6000); }
+  $('#btnMail').onclick = ()=>{
+    const d = collect();
+    const subj = 'Abfrage Heizungstausch – '+[d.nachname,d.ort].filter(Boolean).join(', ');
+    location.href = 'mailto:'+EMAIL+'?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(summary(d));
+  };
+  $('#btnPdf').onclick = ()=>window.print();
+  $('#btnLink').onclick = async ()=>{
+    const d = collect(); delete d.sigTyped;
+    const json = JSON.stringify(d);
+    const b64 = btoa(unescape(encodeURIComponent(json))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+    const url = location.href.split('#')[0] + '#d=' + b64;
+    try{ await navigator.clipboard.writeText(url); toast('✓ Link kopiert – der Empfänger sieht das Formular vorausgefüllt.'); }
+    catch(e){ toast('Link: '+url); }
+  };
+  $('#btnReset').onclick = ()=>{
+    if(!confirm('Alle Eingaben löschen?')) return;
+    try{ localStorage.removeItem(KEY); }catch(e){}
+    frm.reset(); frm.elements.kostenGesamt.dataset.manual='';
+    ctx.clearRect(0,0,cv.width,cv.height); hasInk=false;
+    history.replaceState(null,'',location.pathname+location.search);
+    $('#prefillBanner').classList.remove('show'); update();
+  };
+
+  /* ---------- Start ---------- */
+  load();
+  const m = location.hash.match(/#d=([\w-]+)/);
+  if(m){
+    try{
+      const b = m[1].replace(/-/g,'+').replace(/_/g,'/');
+      apply(JSON.parse(decodeURIComponent(escape(atob(b)))));
+      $('#prefillBanner').classList.add('show');
+    }catch(e){}
+  }
+  if(!frm.elements.ortDatum.value) frm.elements.ortDatum.value = new Date().toLocaleDateString('de-DE');
+  if(frm.elements.kostenGesamt.value && (+frm.elements.kostenHeizung.value + +frm.elements.kostenUmfeld.value) !== +frm.elements.kostenGesamt.value) frm.elements.kostenGesamt.dataset.manual='1';
+  sizeCanvas(); update();
+})();
+</script>
+</body>
+</html>
