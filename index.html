@@ -142,7 +142,7 @@ input:focus,select:focus,textarea:focus{outline:2px solid var(--ci-teal-light);b
   select{display:none!important}
   .print-opts{display:flex!important}
   #vorherBox{display:grid!important}
-  #liSteuer{opacity:1!important}
+  #liSteuer,#liImsys{opacity:1!important}
   .result.empty,.result-detail.empty{display:none}
   input[type=number]::-webkit-inner-spin-button{display:none}
   input,select,textarea{border:0!important;border-bottom:1px solid var(--line)!important;border-radius:0!important;padding:2px 0!important;min-height:0!important}
@@ -250,7 +250,7 @@ input:focus,select:focus,textarea:focus{outline:2px solid var(--ci-teal-light);b
       <label class="chip"><input type="radio" name="altTyp" value="sonstige"><span>Sonstige</span></label>
     </div>
     <div class="grid" style="margin-top:12px">
-      <div class="c2 half"><label class="f">Baujahr der Heizung</label><input type="number" name="altBaujahr" min="1950" max="2100" placeholder="lt. Typenschild"></div>
+      <div class="c2 half"><label class="f">Inbetriebnahme der Heizung</label><input type="text" name="altInbetrieb" placeholder="TT.MM.JJJJ"></div>
       <div class="c2 half"><label class="f">Noch funktionstüchtig?</label>
         <select name="altFunktion"><option value=""></option><option value="ja">Ja</option><option value="nein">Nein, defekt</option></select></div>
       <div class="c2"><label class="f">Verbrauch pro Jahr</label><input type="text" name="verbrauch" placeholder="z. B. 2.400 l / 22.000 kWh"></div>
@@ -259,6 +259,10 @@ input:focus,select:focus,textarea:focus{outline:2px solid var(--ci-teal-light);b
       <div class="c3"><label class="f">Warmwasser</label>
         <select name="warmwasser"><option value=""></option><option>über die Heizung (zentral)</option><option>dezentral (Durchlauferhitzer/Boiler)</option></select></div>
     </div>
+    <table class="yn" style="margin-top:10px">
+      <tr><td>Liegt ein Inbetriebnahme- bzw. Messprotokoll des Schornsteinfegers mit dem Inbetriebnahmedatum vor?</td><td><span class="chips"><label class="chip"><input type="radio" name="q_protokoll" value="ja"><span>Ja</span></label><label class="chip"><input type="radio" name="q_protokoll" value="nein"><span>Nein</span></label></span></td></tr>
+    </table>
+    <div class="hint">Das Alter der Heizung muss nachgewiesen werden (u. a. für den Klimageschwindigkeitsbonus). Ein Foto des Typenschilds reicht dafür in den meisten Fällen <b>nicht</b> aus. Liegt kein Protokoll vor, fordern Sie es bitte beim zuständigen <b>Bezirksschornsteinfeger</b> an – Name und Kontakt stehen z. B. auf Ihrem Feuerstättenbescheid.</div>
   </section>
 
   <!-- 4 Neue Heizung -->
@@ -289,6 +293,13 @@ input:focus,select:focus,textarea:focus{outline:2px solid var(--ci-teal-light);b
         </select></div>
       <div class="c2"><label class="f">Geplante Umsetzung</label><input type="text" name="umsetzung" placeholder="MM/JJJJ"></div>
     </div>
+    <div class="sub" style="margin-top:14px">Stromzähler</div>
+    <table class="yn">
+      <tr><td>Ist bereits ein intelligentes Messsystem (iMSys / Smart Meter mit Gateway) eingebaut?</td><td>
+        <span class="chips"><label class="chip"><input type="radio" name="q_imsys" value="ja"><span>Ja</span></label><label class="chip"><input type="radio" name="q_imsys" value="nein"><span>Nein</span></label><label class="chip"><input type="radio" name="q_imsys" value="unbekannt"><span>Weiß nicht</span></label></span></td></tr>
+    </table>
+    <div class="hint">Nur bei Wärmepumpen relevant: Ist noch kein iMSys vorhanden, muss <b>spätestens bis zur Inbetriebnahme</b> der neuen Heizung ein intelligentes Messsystem inkl. Steuerungseinrichtung beim Messstellenbetreiber <b>bestellt</b> sein – das ist Fördervoraussetzung. Das Einbauentgelt ist förderfähig. Auskunft, ob ein iMSys verbaut ist, gibt Ihr Messstellenbetreiber (steht auf der Stromrechnung).</div>
+    <div class="info keep" id="imsysBox" style="display:none;margin-top:10px"><b>Bestellpflicht iMSys:</b> Da bei Ihnen noch kein intelligentes Messsystem vorhanden ist bzw. dies unklar ist, muss <b>spätestens bis zur Inbetriebnahme</b> der Wärmepumpe ein iMSys inkl. Steuerungseinrichtung beim Messstellenbetreiber (grundzuständig oder wettbewerblich) bestellt sein. Am besten gleich mit der Auftragserteilung bestellen. Ohne diese Bestellung ist die Wärmepumpe <b>nicht förderfähig</b>. Als Nachweis genügt die Auftrags- bzw. Bestellbestätigung. Die Kosten für den Einbau sind förderfähig und können mit abgerechnet werden.</div>
   </section>
 
   <!-- 5 Kosten & Förderung -->
@@ -335,7 +346,9 @@ input:focus,select:focus,textarea:focus{outline:2px solid var(--ci-teal-light);b
       <li><label><input type="checkbox" name="u_plaene"><span>Gebäudepläne (Grundrisse, Schnitte, Ansichten)</span></label></li>
       <li><label><input type="checkbox" name="u_melde"><span>Meldebescheinigung (mind. ein Eigentümer im Haus gemeldet) <span class="opt">– nur bei Boni</span></span></label></li>
       <li id="liSteuer"><label><input type="checkbox" name="u_steuer"><span>Einkommensteuerbescheide 2. + 3. Jahr vor Antrag <span class="opt">– nur bei Einkommensbonus</span></span></label></li>
-      <li><label><input type="checkbox" name="u_typenschild"><span>Foto Typenschild der alten Heizung <span class="opt">– für den Klimabonus</span></span></label></li>
+      <li><label><input type="checkbox" name="u_protokoll"><span>Inbetriebnahme-/Messprotokoll des Schornsteinfegers <span class="opt">– Nachweis Alter der Heizung; fehlt es, beim Bezirksschornsteinfeger anfordern</span></span></label></li>
+      <li><label><input type="checkbox" name="u_typenschild"><span>Foto Typenschild der alten Heizung <span class="opt">– ergänzend</span></span></label></li>
+      <li id="liImsys"><label><input type="checkbox" name="u_imsys"><span>Bestellbestätigung iMSys <span class="opt">– nur Wärmepumpe ohne vorhandenes iMSys; Bestellung spätestens bis zur Inbetriebnahme</span></span></label></li>
     </ul>
   </section>
 
@@ -442,7 +455,7 @@ input:focus,select:focus,textarea:focus{outline:2px solid var(--ci-teal-light);b
     const weGes = +d.weGesamt||0;
     const n = +d.weBetroffen || weGes || 0;
     const selbst = d.selbst==='ja' || d.selbst==='teilweise';
-    const altBj = +d.altBaujahr||0, alter = altBj ? YEAR-altBj : 0;
+    const bjm = String(d.altInbetrieb||'').match(/(19|20)\d{2}/); const altBj = bjm ? +bjm[0] : 0, alter = altBj ? YEAR-altBj : 0;
     const funkt = d.altFunktion==='ja';
     let kgb = 0, kgbTxt = '';
     if(selbst && funkt){
@@ -489,6 +502,9 @@ input:focus,select:focus,textarea:focus{outline:2px solid var(--ci-teal-light);b
     if(d.q_mehrgeb==='ja') w.push('Mehrere Gebäude an einer Anlage = Gebäudenetz – zuständig ist dann das BAFA, nicht die KfW. Wir prüfen die günstigere Route.');
     if(d.q_vorher==='ja') w.push('Früherer KfW-458-Antrag: Der Kostendeckel gilt einmalig je Wohneinheit – bereits genutzte Beträge stehen nicht erneut zur Verfügung.');
     if(d.selbst==='nein' && (d.einkommen||+d.kinder)) w.push('Bei Vermietung gibt es keine Boni – nur die Grundförderung von 30 %.');
+    const wp = (d.neu||[]).some(x=>x.startsWith('WP'));
+    if(d.q_protokoll==='nein') w.push('Kein Schornsteinfeger-Protokoll vorhanden: Bitte beim zuständigen Bezirksschornsteinfeger anfordern – das Typenschild reicht als Nachweis für das Alter der Heizung meist nicht aus.');
+    if(wp && d.q_imsys && d.q_imsys!=='ja') w.push('Wärmepumpe ohne vorhandenes iMSys: Spätestens bis zur Inbetriebnahme muss ein intelligentes Messsystem beim Messstellenbetreiber bestellt sein – sonst keine Förderung (Details unter Punkt 4).');
     if(selbst && d.altFunktion==='nein') w.push('Die Heizung ist defekt: Der Klimageschwindigkeitsbonus setzt eine funktionstüchtige Altanlage voraus. Auch im Notfall muss der Antrag vor dem Einbau gestellt werden – eine Übergangslösung (z. B. mobile Heizung) ist zulässig.');
     if(selbst && ['gas','biomasse'].includes(d.altTyp) && altBj && alter<20) w.push('Gas- bzw. Biomasseheizungen sind erst ab 20 Jahren Alter bonusfähig (Klimageschwindigkeitsbonus).');
     $('#warnList').innerHTML = w.map(x=>'<li>'+x+'</li>').join('');
@@ -514,6 +530,9 @@ input:focus,select:focus,textarea:focus{outline:2px solid var(--ci-teal-light);b
     const g = frm.elements.kostenGesamt;
     if((h||u) && !g.dataset.manual){ g.value = h+u; d.kostenGesamt = String(h+u); }
     $('#vorherBox').style.display = d.q_vorher==='ja' ? '' : 'none';
+    const wpSel = (d.neu||[]).some(x=>x.startsWith('WP'));
+    $('#imsysBox').style.display = (wpSel && d.q_imsys && d.q_imsys!=='ja') ? '' : 'none';
+    $('#liImsys').style.opacity = (wpSel && d.q_imsys!=='ja') ? 1 : .45;
     $('#liSteuer').style.opacity = (+d.einkommen>=1 && +d.einkommen<=4 && d.selbst!=='nein') ? 1 : .45;
     $('#sigTypedOut').textContent = d.sigTyped||'';
     togglePh();
@@ -560,19 +579,19 @@ input:focus,select:focus,textarea:focus{outline:2px solid var(--ci-teal-light);b
     Object.keys(q).forEach(k=>add(q[k], d[k]));
     if(d.q_vorher==='ja') add('Bereits erhalten', d.vorherBetrag && eur(+d.vorherBetrag));
     L.push('','3) BESTEHENDE HEIZUNG');
-    add('Energieträger', labels[d.altTyp]); add('Baujahr', d.altBaujahr);
+    add('Energieträger', labels[d.altTyp]); add('Inbetriebnahme', d.altInbetrieb); add('Schornsteinfeger-Protokoll', d.q_protokoll);
     add('Funktionstüchtig', d.altFunktion); add('Verbrauch/Jahr', d.verbrauch);
     add('Heizflächen', d.heizflaechen); add('Warmwasser', d.warmwasser);
     L.push('','4) GEPLANTE HEIZUNG');
     add('Art', (d.neu||[]).join(', ')); add('Hersteller/Modell', d.modell);
-    add('Fachbetrieb', d.fachbetrieb); add('Stand', d.stand); add('Umsetzung', d.umsetzung);
+    add('Fachbetrieb', d.fachbetrieb); add('Stand', d.stand); add('Umsetzung', d.umsetzung); add('iMSys vorhanden', d.q_imsys);
     L.push('','5) KOSTEN & BONI');
     add('Heizung inkl. Einbau', d.kostenHeizung && eur(+d.kostenHeizung));
     add('Umfeldmaßnahmen', d.kostenUmfeld && eur(+d.kostenUmfeld));
     add('Gesamt', d.kostenGesamt && eur(+d.kostenGesamt));
     add('Selbst bewohnt', selbstL[d.selbst]); add('Einkommen', ekL[d.einkommen]); add('Kinder', d.kinder);
     add('Schätzung', $('#rSatz').textContent+' · Deckel '+$('#rDeckel').textContent+' · Zuschuss '+$('#rZuschuss').textContent);
-    const u = {u_angebot:'Angebot',u_vertrag:'Vertrag mit Bedingung',u_grundbuch:'Grundbuchauszug',u_plaene:'Gebäudepläne',u_melde:'Meldebescheinigung',u_steuer:'Steuerbescheide',u_typenschild:'Foto Typenschild'};
+    const u = {u_angebot:'Angebot',u_vertrag:'Vertrag mit Bedingung',u_grundbuch:'Grundbuchauszug',u_plaene:'Gebäudepläne',u_melde:'Meldebescheinigung',u_steuer:'Steuerbescheide',u_protokoll:'Schornsteinfeger-Protokoll',u_typenschild:'Foto Typenschild',u_imsys:'Bestellbestätigung iMSys'};
     L.push('','6) UNTERLAGEN (bitte als Anhang beifügen)');
     add('Beigefügt', Object.keys(u).filter(k=>d[k]).map(k=>u[k]).join(', ')||'–');
     if(d.anmerkungen){ L.push('','ANMERKUNGEN', d.anmerkungen); }
