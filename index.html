@@ -122,6 +122,7 @@ input:focus,select:focus,textarea:focus{outline:2px solid var(--ci-teal-light);b
 
 .ci-footer{border-top:.6pt solid var(--ci-teal);margin:26px 0 30px;padding-top:8px;color:var(--ink-mid);font-size:11px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px}
 .print-only{display:none}
+.extlink{color:var(--ci-teal);font-weight:600}
 .print-opts{display:none;flex-wrap:wrap;gap:4px 16px;padding:4px 0 2px;font-size:.9rem}
 .print-opts span.on{font-weight:700}
 
@@ -155,6 +156,7 @@ input:focus,select:focus,textarea:focus{outline:2px solid var(--ci-teal-light);b
   .sig{border:0;border-bottom:1px solid var(--ink)}
   .sig .ph{display:none}
   a{color:inherit}
+  a.extlink::after{content:" (" attr(href) ")";font-weight:400;word-break:break-all;font-size:.85em}
   ::placeholder{color:transparent!important}
   input[type=month]::-webkit-calendar-picker-indicator{display:none}
 }
@@ -298,8 +300,8 @@ input:focus,select:focus,textarea:focus{outline:2px solid var(--ci-teal-light);b
       <tr><td>Ist bereits ein intelligentes Messsystem (iMSys / Smart Meter mit Gateway) eingebaut?</td><td>
         <span class="chips"><label class="chip"><input type="radio" name="q_imsys" value="ja"><span>Ja</span></label><label class="chip"><input type="radio" name="q_imsys" value="nein"><span>Nein</span></label><label class="chip"><input type="radio" name="q_imsys" value="unbekannt"><span>Weiß nicht</span></label></span></td></tr>
     </table>
-    <div class="hint">Nur bei Wärmepumpen relevant: Ist noch kein iMSys vorhanden, muss <b>spätestens bis zur Inbetriebnahme</b> der neuen Heizung ein intelligentes Messsystem inkl. Steuerungseinrichtung beim Messstellenbetreiber <b>bestellt</b> sein – das ist Fördervoraussetzung. Das Einbauentgelt ist förderfähig. Auskunft, ob ein iMSys verbaut ist, gibt Ihr Messstellenbetreiber (steht auf der Stromrechnung).</div>
-    <div class="info keep" id="imsysBox" style="display:none;margin-top:10px"><b>Bestellpflicht iMSys:</b> Da bei Ihnen noch kein intelligentes Messsystem vorhanden ist bzw. dies unklar ist, muss <b>spätestens bis zur Inbetriebnahme</b> der Wärmepumpe ein iMSys inkl. Steuerungseinrichtung beim Messstellenbetreiber (grundzuständig oder wettbewerblich) bestellt sein. Am besten gleich mit der Auftragserteilung bestellen. Ohne diese Bestellung ist die Wärmepumpe <b>nicht förderfähig</b>. Als Nachweis genügt die Auftrags- bzw. Bestellbestätigung. Die Kosten für den Einbau sind förderfähig und können mit abgerechnet werden.</div>
+    <div class="hint">Nur bei Wärmepumpen relevant: Ist noch kein iMSys vorhanden, muss <b>spätestens bis zur Inbetriebnahme</b> der neuen Heizung ein intelligentes Messsystem inkl. Steuerungseinrichtung beim Messstellenbetreiber <b>bestellt</b> sein – das ist Fördervoraussetzung. Das Einbauentgelt ist förderfähig. Auskunft, ob ein iMSys verbaut ist, gibt Ihr Messstellenbetreiber (steht auf der Stromrechnung). Im Netzgebiet der Bayernwerk Netz GmbH: <a class="extlink" href="https://www.bayernwerk-netz.de/de/energie-service/messstellenbetrieb/zaehlerwechsel-auf-wunsch-endkunden11.html" target="_blank" rel="noopener">Bestellung bei Bayernwerk Netz auslösen</a>. Als Nachweis genügt ein <b>Screenshot der ausgelösten Bestellung</b>.</div>
+    <div class="info keep" id="imsysBox" style="display:none;margin-top:10px"><b>Bestellpflicht iMSys:</b> Da bei Ihnen noch kein intelligentes Messsystem vorhanden ist bzw. dies unklar ist, muss <b>spätestens bis zur Inbetriebnahme</b> der Wärmepumpe ein iMSys inkl. Steuerungseinrichtung beim Messstellenbetreiber (grundzuständig oder wettbewerblich) bestellt sein. Am besten gleich mit der Auftragserteilung bestellen. Ohne diese Bestellung ist die Wärmepumpe <b>nicht förderfähig</b>. Die Kosten für den Einbau sind förderfähig und können mit abgerechnet werden.<br><br><b>So geht's bei Bayernwerk:</b> Ist Bayernwerk Netz Ihr Messstellenbetreiber (siehe Stromrechnung), können Sie die Bestellung direkt online auslösen: <a class="extlink" href="https://www.bayernwerk-netz.de/de/energie-service/messstellenbetrieb/zaehlerwechsel-auf-wunsch-endkunden11.html" target="_blank" rel="noopener">Bestellung bei Bayernwerk Netz auslösen</a>. Als Nachweis genügt ein <b>Screenshot der ausgelösten Bestellung</b> – bitte speichern und uns zusenden. Bei einem anderen Messstellenbetreiber genügt dessen Auftrags- bzw. Bestellbestätigung.</div>
   </section>
 
   <!-- 5 Kosten & Förderung -->
@@ -348,7 +350,7 @@ input:focus,select:focus,textarea:focus{outline:2px solid var(--ci-teal-light);b
       <li id="liSteuer"><label><input type="checkbox" name="u_steuer"><span>Einkommensteuerbescheide 2. + 3. Jahr vor Antrag <span class="opt">– nur bei Einkommensbonus</span></span></label></li>
       <li id="liProtokoll"><label><input type="checkbox" name="u_protokoll"><span>Inbetriebnahme-/Messprotokoll des Schornsteinfegers <span class="opt">– nur Gas-Zentral-/Biomasseheizung: Nachweis ≥ 20 Jahre für den Klimabonus; fehlt es, beim Bezirksschornsteinfeger anfordern</span></span></label></li>
       <li><label><input type="checkbox" name="u_typenschild"><span>Foto Typenschild der alten Heizung <span class="opt">– ergänzend</span></span></label></li>
-      <li id="liImsys"><label><input type="checkbox" name="u_imsys"><span>Bestellbestätigung iMSys <span class="opt">– nur Wärmepumpe ohne vorhandenes iMSys; Bestellung spätestens bis zur Inbetriebnahme</span></span></label></li>
+      <li id="liImsys"><label><input type="checkbox" name="u_imsys"><span>Bestellbestätigung iMSys <span class="opt">– nur Wärmepumpe ohne vorhandenes iMSys; Bestellung spätestens bis zur Inbetriebnahme; Screenshot der ausgelösten Bestellung genügt</span></span></label></li>
     </ul>
   </section>
 
