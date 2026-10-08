@@ -242,14 +242,6 @@ body.pdfmode .card,body.pdfmode tr,body.pdfmode li{page-break-inside:avoid}
       <div class="c3"><label class="f">PLZ / Ort <span class="req">*</span></label><input type="text" name="ort" required></div>
       <div class="c3"><label class="f">Telefon <span class="req">*</span></label><input type="tel" name="tel" required autocomplete="tel"></div>
       <div class="c3"><label class="f">E-Mail <span class="req">*</span></label><input type="email" name="email" required autocomplete="email"></div>
-      <div class="c6"><label class="f">Eigentumsverhältnis <span class="req">*</span></label>
-        <div class="chips" data-req="art">
-          <label class="chip"><input type="radio" name="art" value="EFH selbstgenutzt"><span>EFH, selbst bewohnt</span></label>
-          <label class="chip"><input type="radio" name="art" value="EFH/ETW vermietet"><span>EFH / Wohnung vermietet</span></label>
-          <label class="chip"><input type="radio" name="art" value="Eigentumswohnung"><span>Eigentumswohnung</span></label>
-          <label class="chip"><input type="radio" name="art" value="MFH (Alleineigentum)"><span>Mehrfamilienhaus</span></label>
-          <label class="chip"><input type="radio" name="art" value="WEG"><span>WEG (Gemeinschaftseigentum)</span></label>
-        </div></div>
     </div>
   </section>
 
@@ -260,7 +252,7 @@ body.pdfmode .card,body.pdfmode tr,body.pdfmode li{page-break-inside:avoid}
       <div class="c3"><label class="f">Objektadresse <span style="font-weight:400">(falls abweichend)</span></label><input type="text" name="objAdresse" placeholder="Straße, Nr., PLZ Ort"></div>
       <div class="c3"><label class="f">Baujahr Gebäude <span class="req">*</span></label><input type="number" name="baujahr" min="1500" max="2100" required></div>
       <div class="c3"><label class="f">Wohneinheiten gesamt <span class="req">*</span></label><input type="number" name="weGesamt" min="1" required></div>
-      <div class="c3"><label class="f">davon an neue Heizung</label><input type="number" name="weBetroffen" min="1" placeholder="= alle"></div>
+      <div class="c3"><label class="f">davon selbst bewohnt (Hauptwohnsitz) <span class="req">*</span></label><input type="number" name="weSelbst" min="0" required placeholder="0 = vermietet"></div>
     </div>
     <div class="sub" style="margin-top:14px">Sonderfälle</div>
     <table class="yn">
@@ -324,8 +316,7 @@ body.pdfmode .card,body.pdfmode tr,body.pdfmode li{page-break-inside:avoid}
       <label class="chip"><input type="checkbox" name="neu" value="Sonstige"><span>Sonstige</span></label>
     </div>
     <div class="grid" style="margin-top:12px">
-      <div class="c3"><label class="f">Hersteller / Modell</label><input type="text" name="modell" placeholder="lt. Angebot"></div>
-      <div class="c3"><label class="f">Fachbetrieb</label><input type="text" name="fachbetrieb"></div>
+      <div class="c6"><label class="f">Hersteller / Modell</label><input type="text" name="modell" placeholder="lt. Angebot"></div>
       <div class="c4"><label class="f">Stand der Beauftragung</label>
         <select name="stand"><option value=""></option>
           <option value="kein Angebot">noch kein Angebot</option>
@@ -348,16 +339,12 @@ body.pdfmode .card,body.pdfmode tr,body.pdfmode li{page-break-inside:avoid}
   <section class="card">
     <h2><span class="n">5</span>Kosten &amp; Förderung</h2>
     <div class="grid">
-      <div class="c2"><label class="f">Heizung inkl. Einbau (€ brutto)</label><input type="number" name="kostenHeizung" min="0" step="100"></div>
-      <div class="c2"><label class="f">Umfeldmaßnahmen (€ brutto)</label><input type="number" name="kostenUmfeld" min="0" step="100"></div>
-      <div class="c2"><label class="f">Gesamt (€ brutto) <span class="req">*</span></label><input type="number" name="kostenGesamt" min="0" step="100" required></div>
+      <div class="c3"><label class="f">Gesamtkosten lt. Angebot (€ brutto) <span class="req">*</span></label><input type="number" name="kostenGesamt" min="0" step="100" required></div>
     </div>
-    <div class="hint">Umfeldmaßnahmen: z. B. Demontage Altanlage, Heizkörper, Pufferspeicher, hydraulischer Abgleich, Elektro, Durchbrüche.</div>
+    <div class="hint">Inkl. Einbau und Umfeldmaßnahmen, z. B. Demontage Altanlage, Heizkörper, Pufferspeicher, hydraulischer Abgleich, Elektro, Durchbrüche.</div>
 
     <div class="sub" style="margin-top:16px">Angaben für die Boni</div>
     <div class="grid">
-      <div class="c3"><label class="f">Selbst bewohnt (Hauptwohnsitz)? <span class="req">*</span></label>
-        <select name="selbst" required><option value=""></option><option value="ja">Ja</option><option value="teilweise">Ja, eine WE – weitere vermietet</option><option value="nein">Nein, vermietet</option></select></div>
       <div class="c3"><label class="f">Zu versteuerndes Haushaltseinkommen</label>
         <select name="einkommen"><option value=""></option>
           <option value="1">bis 30.000 €</option><option value="2">30.001 – 40.000 €</option>
@@ -491,7 +478,7 @@ body.pdfmode .card,body.pdfmode tr,body.pdfmode li{page-break-inside:avoid}
 
   /* ---------- Fortschritt ---------- */
   function progress(d){
-    const req = ['vorname','nachname','strasse','ort','tel','email','art','baujahr','weGesamt','altTyp','selbst','kostenGesamt'];
+    const req = ['vorname','nachname','strasse','ort','tel','email','baujahr','weGesamt','weSelbst','altTyp','kostenGesamt'];
     let ok = req.filter(k=>d[k]).length + ((d.neu&&d.neu.length)?1:0);
     const p = Math.round(ok/(req.length+1)*100);
     $('#progBar').style.width = p+'%';
@@ -501,47 +488,58 @@ body.pdfmode .card,body.pdfmode tr,body.pdfmode li{page-break-inside:avoid}
   /* ---------- Förderlogik (Stand ab 21.07.2026) ---------- */
   function calc(d){
     const weGes = +d.weGesamt||0;
-    const n = +d.weBetroffen || weGes || 0;
-    const selbst = d.selbst==='ja' || d.selbst==='teilweise';
+    const n = weGes;
+    const selbstAngabe = d.weSelbst!==undefined;
+    const weS = Math.min(+d.weSelbst||0, weGes||Infinity);
+    const selbst = weS > 0;
+    const anteil = weGes ? weS/weGes : (selbst?1:0);       // Boni nur anteilig für selbst bewohnte WE
     const bjm = String(d.altInbetrieb||'').match(/(19|20)\d{2}/); const altBj = bjm ? +bjm[0] : 0, alter = altBj ? YEAR-altBj : 0;
-    const funkt = d.altFunktion==='ja';
-    let kgb = 0, kgbTxt = '';
+    const funkt = d.altFunktion!=='nein';                    // ohne Angabe: Annahme funktionstüchtig
+    const fehlt = [];
+    let kgb = 0;
     if(selbst && funkt){
       if(['oel','kohle','gasetage','nachtspeicher'].includes(d.altTyp)) kgb=16;
-      else if(['gas','biomasse'].includes(d.altTyp) && alter>=20) kgb=16;
+      else if(['gas','biomasse'].includes(d.altTyp)){
+        if(!altBj) fehlt.push('Inbetriebnahme der Heizung (für Klimabonus)');
+        else if(alter>=20) kgb=16;
+      }
+      else if(!d.altTyp) fehlt.push('Energieträger der bestehenden Heizung');
+      if(kgb && !d.altFunktion) fehlt.push('„Noch funktionstüchtig?“ (Klimabonus angenommen)');
     }
     let ek = 0, stufe = +d.einkommen||0;
     if(selbst && stufe){
       if((+d.kinder||0)>0 && stufe>1) stufe -= 1;   // Familienzuschlag −10.000 €
       ek = {1:40,2:30,3:10}[stufe]||0;
     }
+    if(selbst && !d.einkommen) fehlt.push('Haushaltseinkommen (für Einkommensbonus)');
+    if(!selbstAngabe) fehlt.push('„davon selbst bewohnt“ (Voraussetzung für alle Boni)');
     const cap = (selbst && stufe===1) ? 80 : 70;   // § 8.4.1: 80 % nur bis 30.000 € (inkl. Familienzuschlag 40.000 €), sonst 70 %
-    const satz = Math.min(30+kgb+ek, cap);
+    const satzSelbst = Math.min(30+kgb+ek, cap);
+    const satzEff = selbst ? 30 + (satzSelbst-30)*anteil : 30;
     let deckel = 0;
     if(n>0) deckel = 28000 + 15000*Math.min(Math.max(n-1,0),5) + 8000*Math.max(n-6,0);
     const kosten = +d.kostenGesamt||0;
 
-    $('#rSatz').textContent = (d.selbst||d.altTyp) ? satz+' %' : '–';
+    const fmtP = p => (Math.round(p*10)/10).toLocaleString('de-DE')+' %';
+    $('#rSatz').textContent = (selbstAngabe||d.altTyp) ? fmtP(satzEff) : '–';
     $('#rDeckel').textContent = deckel ? eur(deckel) : '–';
     let detail = 'Grundförderung 30 %';
     if(kgb) detail += ' + Klimageschwindigkeitsbonus 16 %';
     if(ek) detail += ' + Einkommensbonus '+ek+' %';
     if(30+kgb+ek>cap) detail += ' → gedeckelt auf '+cap+' %';
+    if(selbst && anteil<1 && (kgb||ek)) detail += ' · Boni nur anteilig für '+weS+' von '+weGes+' WE (selbst bewohnt) → Ø '+fmtP(satzEff);
     let zus = '–';
     if(kosten && deckel){
       const basis = Math.min(kosten, deckel);
-      if(n<=1){ zus = eur(basis*satz/100); }
-      else {
-        zus = eur(basis*0.30) + (kgb||ek ? ' +' : '');
-        if(kgb||ek) detail += ' · bei mehreren WE gelten Boni nur für die selbst bewohnte Einheit (Zusatzantrag) – Grundförderung angezeigt, Boni kommen hinzu';
-      }
+      zus = eur(basis*satzEff/100);
     }
+    if(fehlt.length) detail += ' · Für eine vollständige Schätzung fehlt: '+fehlt.join(', ');
     if(d.q_vorsteuer==='ja') detail += ' · bei Vorsteuerabzug zählen nur Nettokosten';
     $('#rZuschuss').textContent = zus;
-    const leer = !(d.selbst||d.altTyp);
+    const leer = !(selbstAngabe||d.altTyp);
     document.querySelector('.result').classList.toggle('empty', leer);
     $('#rDetail').classList.toggle('empty', leer);
-    $('#rDetail').textContent = (d.selbst||d.altTyp) ? detail+'. Unverbindliche Orientierung.' : '';
+    $('#rDetail').textContent = (selbstAngabe||d.altTyp) ? detail+'. Unverbindliche Orientierung.' : '';
 
     /* Hinweise */
     const w = [];
@@ -550,7 +548,7 @@ body.pdfmode .card,body.pdfmode tr,body.pdfmode li{page-break-inside:avoid}
     if(d.q_netz==='ja') w.push('Bei Anschluss- und Benutzungszwang wird nur der Wärmenetzanschluss gefördert, keine eigene Heizung.');
     if(d.q_mehrgeb==='ja') w.push('Mehrere Gebäude an einer Anlage = Gebäudenetz – zuständig ist dann das BAFA, nicht die KfW. Wir prüfen die günstigere Route.');
     if(d.q_vorher==='ja') w.push('Früherer KfW-458-Antrag: Der Kostendeckel gilt einmalig je Wohneinheit – bereits genutzte Beträge stehen nicht erneut zur Verfügung.');
-    if(d.selbst==='nein' && (d.einkommen||+d.kinder)) w.push('Bei Vermietung gibt es keine Boni – nur die Grundförderung von 30 %.');
+    if(selbstAngabe && !selbst && (d.einkommen||+d.kinder)) w.push('Bei Vermietung gibt es keine Boni – nur die Grundförderung von 30 %.');
     const wp = (d.neu||[]).some(x=>x.startsWith('WP'));
     if(d.q_protokoll==='nein' && ['gas','biomasse'].includes(d.altTyp)) w.push('Kein Schornsteinfeger-Protokoll vorhanden: Für den Klimageschwindigkeitsbonus muss bei Gas-Zentral- und Biomasseheizungen ein Alter von mindestens 20 Jahren nachgewiesen werden. Bitte das Protokoll beim zuständigen Bezirksschornsteinfeger anfordern – das Typenschild reicht meist nicht aus.');
     if(wp && d.q_imsys && d.q_imsys!=='ja') w.push('Wärmepumpe ohne vorhandenes iMSys: Spätestens bis zur Inbetriebnahme muss ein intelligentes Messsystem beim Messstellenbetreiber bestellt sein – sonst keine Förderung (Details unter Punkt 4).');
@@ -574,10 +572,6 @@ body.pdfmode .card,body.pdfmode tr,body.pdfmode li{page-break-inside:avoid}
 
   function update(){
     const d = collect();
-    // Kostensumme
-    const h=+d.kostenHeizung||0, u=+d.kostenUmfeld||0;
-    const g = frm.elements.kostenGesamt;
-    if((h||u) && !g.dataset.manual){ g.value = h+u; d.kostenGesamt = String(h+u); }
     $('#vorherBox').style.display = d.q_vorher==='ja' ? '' : 'none';
     const wpSel = (d.neu||[]).some(x=>x.startsWith('WP'));
     const imsysBoxOn = wpSel && d.q_imsys && d.q_imsys!=='ja';
@@ -591,7 +585,6 @@ body.pdfmode .card,body.pdfmode tr,body.pdfmode li{page-break-inside:avoid}
     togglePh();
     progress(d); calc(d); save(); printOpts();
   }
-  frm.elements.kostenGesamt.addEventListener('input', e=>{ e.target.dataset.manual = e.target.value ? '1' : ''; });
   frm.addEventListener('input', update);
   frm.addEventListener('change', update);
 
@@ -615,7 +608,6 @@ body.pdfmode .card,body.pdfmode tr,body.pdfmode li{page-break-inside:avoid}
 
   /* ---------- Textzusammenfassung ---------- */
   const labels = {oel:'Öl',gas:'Gas-Zentralheizung',gasetage:'Gasetagenheizung',nachtspeicher:'Nachtspeicher/Elektro',kohle:'Kohle',biomasse:'Holz/Pellets',sonstige:'Sonstige'};
-  const selbstL = {ja:'Ja',teilweise:'Ja, eine WE (weitere vermietet)',nein:'Nein, vermietet'};
   const ekL = {1:'bis 30.000 €',2:'30.001–40.000 €',3:'40.001–50.000 €',4:'50.001–60.000 €',5:'über 60.000 €',0:'keine Angabe'};
   function summary(d){
     const L = [];
@@ -624,10 +616,10 @@ body.pdfmode .card,body.pdfmode tr,body.pdfmode li{page-break-inside:avoid}
     L.push('1) ANTRAGSTELLER');
     add('Name', [d.anrede,d.vorname,d.nachname].filter(Boolean).join(' '));
     add('Adresse', [d.strasse,d.ort].filter(Boolean).join(', '));
-    add('Telefon', d.tel); add('E-Mail', d.email); add('Eigentum', d.art);
+    add('Telefon', d.tel); add('E-Mail', d.email);
     L.push('','2) GEBÄUDE');
     add('Objekt', d.objAdresse||'wie oben'); add('Baujahr', d.baujahr);
-    add('WE gesamt / betroffen', (d.weGesamt||'?')+' / '+(d.weBetroffen||d.weGesamt||'?'));
+    add('WE gesamt / davon selbst bewohnt', (d.weGesamt||'?')+' / '+(d.weSelbst!==undefined?d.weSelbst:'?'));
     const q = {q_netz:'Wärmenetz-Anschlusszwang',q_mehrgeb:'Mehrere Gebäude',q_vorsteuer:'Vorsteuerabzug',q_vorher:'Früherer 458-Antrag'};
     Object.keys(q).forEach(k=>add(q[k], d[k]));
     if(d.q_vorher==='ja') add('Bereits erhalten', d.vorherBetrag && eur(+d.vorherBetrag));
@@ -637,12 +629,10 @@ body.pdfmode .card,body.pdfmode tr,body.pdfmode li{page-break-inside:avoid}
     add('Heizflächen', d.heizflaechen); add('Warmwasser', d.warmwasser);
     L.push('','4) GEPLANTE HEIZUNG');
     add('Art', (d.neu||[]).join(', ')); add('Hersteller/Modell', d.modell);
-    add('Fachbetrieb', d.fachbetrieb); add('Stand', d.stand); add('Umsetzung', d.umsetzung); add('iMSys vorhanden', d.q_imsys);
+    add('Stand', d.stand); add('Umsetzung', d.umsetzung); add('iMSys vorhanden', d.q_imsys);
     L.push('','5) KOSTEN & BONI');
-    add('Heizung inkl. Einbau', d.kostenHeizung && eur(+d.kostenHeizung));
-    add('Umfeldmaßnahmen', d.kostenUmfeld && eur(+d.kostenUmfeld));
-    add('Gesamt', d.kostenGesamt && eur(+d.kostenGesamt));
-    add('Selbst bewohnt', selbstL[d.selbst]); add('Einkommen', ekL[d.einkommen]); add('Kinder', d.kinder);
+    add('Gesamtkosten (brutto)', d.kostenGesamt && eur(+d.kostenGesamt));
+    add('Einkommen', ekL[d.einkommen]); add('Kinder', d.kinder);
     add('Schätzung', $('#rSatz').textContent+' · Deckel '+$('#rDeckel').textContent+' · Zuschuss '+$('#rZuschuss').textContent);
     const u = {u_angebot:'Angebot',u_vertrag:'Vertrag mit Bedingung',u_plaene:'Gebäudepläne',u_protokoll:'Schornsteinfeger-Protokoll',u_typenschild:'Foto Typenschild',u_imsys:'Bestellbestätigung iMSys'};
     L.push('','6) UNTERLAGEN (bitte als Anhang beifügen)');
@@ -752,7 +742,7 @@ body.pdfmode .card,body.pdfmode tr,body.pdfmode li{page-break-inside:avoid}
   $('#btnReset').onclick = ()=>{
     if(!confirm('Alle Eingaben löschen?')) return;
     try{ localStorage.removeItem(KEY); }catch(e){}
-    frm.reset(); frm.elements.kostenGesamt.dataset.manual='';
+    frm.reset();
     ctx.clearRect(0,0,cv.width,cv.height); hasInk=false;
     history.replaceState(null,'',location.pathname+location.search);
     $('#prefillBanner').classList.remove('show'); update();
@@ -768,7 +758,6 @@ body.pdfmode .card,body.pdfmode tr,body.pdfmode li{page-break-inside:avoid}
       $('#prefillBanner').classList.add('show');
     }catch(e){}
   }
-  if(frm.elements.kostenGesamt.value && (+frm.elements.kostenHeizung.value + +frm.elements.kostenUmfeld.value) !== +frm.elements.kostenGesamt.value) frm.elements.kostenGesamt.dataset.manual='1';
   sizeCanvas(); update();
 })();
 </script>
