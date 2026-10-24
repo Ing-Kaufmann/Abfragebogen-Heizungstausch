@@ -242,6 +242,14 @@ body.pdfmode .card,body.pdfmode tr,body.pdfmode li{page-break-inside:avoid}
       <div class="c3"><label class="f">PLZ / Ort <span class="req">*</span></label><input type="text" name="ort" required></div>
       <div class="c3"><label class="f">Telefon <span class="req">*</span></label><input type="tel" name="tel" required autocomplete="tel"></div>
       <div class="c3"><label class="f">E-Mail <span class="req">*</span></label><input type="email" name="email" required autocomplete="email"></div>
+      <div class="c6"><label class="f">Art des Antragstellers</label>
+        <select name="artAntrag"><option value=""></option>
+          <option value="efh">Privatperson – Ein-/Zweifamilienhaus</option>
+          <option value="etw">Privatperson – Eigentumswohnung (Sondereigentum)</option>
+          <option value="mfh">Privatperson – Mehrfamilienhaus (Alleineigentum)</option>
+          <option value="weg">Wohnungseigentümergemeinschaft (WEG – Gemeinschaftseigentum)</option>
+          <option value="unternehmen">Unternehmen / Kommune / Organisation</option>
+        </select></div>
     </div>
   </section>
 
@@ -249,10 +257,11 @@ body.pdfmode .card,body.pdfmode tr,body.pdfmode li{page-break-inside:avoid}
   <section class="card">
     <h2><span class="n">2</span>Gebäude</h2>
     <div class="grid">
-      <div class="c3"><label class="f">Objektadresse <span style="font-weight:400">(falls abweichend)</span></label><input type="text" name="objAdresse" placeholder="Straße, Nr., PLZ Ort"></div>
-      <div class="c3"><label class="f">Baujahr Gebäude <span class="req">*</span></label><input type="number" name="baujahr" min="1500" max="2100" required></div>
-      <div class="c3"><label class="f">Wohneinheiten gesamt <span class="req">*</span></label><input type="number" name="weGesamt" min="1" required></div>
-      <div class="c3"><label class="f">davon selbst bewohnt (Hauptwohnsitz) <span class="req">*</span></label><input type="number" name="weSelbst" min="0" required placeholder="0 = vermietet"></div>
+      <div class="c4"><label class="f">Objektadresse <span style="font-weight:400">(falls abweichend)</span></label><input type="text" name="objAdresse" placeholder="Straße, Nr., PLZ Ort"></div>
+      <div class="c2"><label class="f">Baujahr Gebäude <span class="req">*</span></label><input type="number" name="baujahr" min="1500" max="2100" required></div>
+      <div class="c2"><label class="f">Wohneinheiten gesamt <span class="req">*</span></label><input type="number" name="weGesamt" min="1" required></div>
+      <div class="c2"><label class="f">davon vom Heizungstausch betroffen</label><input type="number" name="weBetroffen" min="1" placeholder="leer = alle"></div>
+      <div class="c2"><label class="f">davon selbst bewohnt (Hauptwohnsitz) <span class="req">*</span></label><input type="number" name="weSelbst" min="0" required placeholder="0 = vermietet"></div>
     </div>
     <div class="sub" style="margin-top:14px">Sonderfälle</div>
     <table class="yn">
@@ -288,6 +297,8 @@ body.pdfmode .card,body.pdfmode tr,body.pdfmode li{page-break-inside:avoid}
       <div class="c2 half"><label class="f">Noch funktionstüchtig?</label>
         <select name="altFunktion"><option value=""></option><option value="ja">Ja</option><option value="nein">Nein, defekt</option></select></div>
       <div class="c2"><label class="f">Verbrauch pro Jahr</label><input type="text" name="verbrauch" placeholder="z. B. 2.400 l / 22.000 kWh"></div>
+      <div class="c4"><label class="f">Hersteller / Typ</label><input type="text" name="altHersteller" placeholder="lt. Typenschild, z. B. Viessmann Vitola 200"></div>
+      <div class="c2"><label class="f">Leistung (kW)</label><input type="text" name="altLeistung" inputmode="decimal" placeholder="lt. Typenschild"></div>
       <div class="c3"><label class="f">Heizflächen</label>
         <select name="heizflaechen"><option value=""></option><option>Heizkörper</option><option>Fußbodenheizung</option><option>Heizkörper + Fußbodenheizung</option></select></div>
       <div class="c3"><label class="f">Warmwasser</label>
@@ -295,6 +306,7 @@ body.pdfmode .card,body.pdfmode tr,body.pdfmode li{page-break-inside:avoid}
     </div>
     <table class="yn" style="margin-top:10px">
       <tr id="trProtokoll"><td>Liegt ein Inbetriebnahme- bzw. Messprotokoll des Schornsteinfegers mit dem Inbetriebnahmedatum vor? <span style="color:var(--ink-mid);font-size:.82rem">(wichtig bei Gas-Zentral- und Biomasseheizungen)</span></td><td><span class="chips"><label class="chip"><input type="radio" name="q_protokoll" value="ja"><span>Ja</span></label><label class="chip"><input type="radio" name="q_protokoll" value="nein"><span>Nein</span></label></span></td></tr>
+      <tr><td>Bleibt die bestehende Heizung nach dem Einbau in Betrieb (z. B. als Hybrid- oder Spitzenlastkessel)?</td><td><span class="chips"><label class="chip"><input type="radio" name="q_altbleibt" value="ja"><span>Ja</span></label><label class="chip"><input type="radio" name="q_altbleibt" value="nein"><span>Nein</span></label></span></td></tr>
     </table>
     <div class="hint"><b>Klimageschwindigkeitsbonus:</b> Bei Öl-, Kohle-, Gasetagen- und Nachtspeicherheizungen gibt es den Bonus unabhängig vom Alter. Bei <b>Gas-Zentral- und Biomasseheizungen</b> nur, wenn die Heizung seit mindestens <b>20 Jahren</b> in Betrieb ist – das muss nachgewiesen werden. Ein Foto des Typenschilds reicht dafür in den meisten Fällen <b>nicht</b> aus. Liegt kein Protokoll vor, fordern Sie es bitte beim zuständigen <b>Bezirksschornsteinfeger</b> an – Name und Kontakt stehen z. B. auf Ihrem Feuerstättenbescheid.</div>
   </section>
@@ -434,7 +446,7 @@ body.pdfmode .card,body.pdfmode tr,body.pdfmode li{page-break-inside:avoid}
 
   <footer class="ci-footer">
     <span>Ingenieurbüro Kaufmann · Ringstraße 10A · 97903 Collenberg · info@ing-kaufmann.de · 0162 / 72 22 043</span>
-    <span>Stand: 09/2026 · Angaben ohne Gewähr</span>
+    <span>Stand: 10/2026 · Angaben ohne Gewähr</span>
   </footer>
 </main>
 </div>
@@ -488,16 +500,18 @@ body.pdfmode .card,body.pdfmode tr,body.pdfmode li{page-break-inside:avoid}
   /* ---------- Förderlogik (Stand ab 21.07.2026) ---------- */
   function calc(d){
     const weGes = +d.weGesamt||0;
-    const n = weGes;
+    const n = Math.min(+d.weBetroffen||weGes, weGes||Infinity);   // Kostendeckel nach betroffenen WE
+    const weg = d.artAntrag==='weg';
     const selbstAngabe = d.weSelbst!==undefined;
-    const weS = Math.min(+d.weSelbst||0, weGes||Infinity);
+    const weS = weg ? 0 : Math.min(+d.weSelbst||0, n||Infinity);  // WEG: Boni nur per Zusatzantrag der Eigentümer
     const selbst = weS > 0;
-    const anteil = weGes ? weS/weGes : (selbst?1:0);       // Boni nur anteilig für selbst bewohnte WE
+    const anteil = n ? weS/n : (selbst?1:0);                 // Boni nur anteilig für selbst bewohnte (betroffene) WE
+    const altBleibt = d.q_altbleibt==='ja';
     const bjm = String(d.altInbetrieb||'').match(/(19|20)\d{2}/); const altBj = bjm ? +bjm[0] : 0, alter = altBj ? YEAR-altBj : 0;
     const funkt = d.altFunktion!=='nein';                    // ohne Angabe: Annahme funktionstüchtig
     const fehlt = [];
     let kgb = 0;
-    if(selbst && funkt){
+    if(selbst && funkt && !altBleibt){
       if(['oel','kohle','gasetage','nachtspeicher'].includes(d.altTyp)) kgb=16;
       else if(['gas','biomasse'].includes(d.altTyp)){
         if(!altBj) fehlt.push('Inbetriebnahme der Heizung (für Klimabonus)');
@@ -512,7 +526,7 @@ body.pdfmode .card,body.pdfmode tr,body.pdfmode li{page-break-inside:avoid}
       ek = {1:40,2:30,3:10}[stufe]||0;
     }
     if(selbst && !d.einkommen) fehlt.push('Haushaltseinkommen (für Einkommensbonus)');
-    if(!selbstAngabe) fehlt.push('„davon selbst bewohnt“ (Voraussetzung für alle Boni)');
+    if(!selbstAngabe && !weg) fehlt.push('„davon selbst bewohnt“ (Voraussetzung für alle Boni)');
     const cap = (selbst && stufe===1) ? 80 : 70;   // § 8.4.1: 80 % nur bis 30.000 € (inkl. Familienzuschlag 40.000 €), sonst 70 %
     const satzSelbst = Math.min(30+kgb+ek, cap);
     const satzEff = selbst ? 30 + (satzSelbst-30)*anteil : 30;
@@ -527,7 +541,9 @@ body.pdfmode .card,body.pdfmode tr,body.pdfmode li{page-break-inside:avoid}
     if(kgb) detail += ' + Klimageschwindigkeitsbonus 16 %';
     if(ek) detail += ' + Einkommensbonus '+ek+' %';
     if(30+kgb+ek>cap) detail += ' → gedeckelt auf '+cap+' %';
-    if(selbst && anteil<1 && (kgb||ek)) detail += ' · Boni nur anteilig für '+weS+' von '+weGes+' WE (selbst bewohnt) → Ø '+fmtP(satzEff);
+    if(selbst && anteil<1 && (kgb||ek)) detail += ' · Boni nur anteilig für '+weS+' von '+n+' WE (selbst bewohnt) → Ø '+fmtP(satzEff);
+    if(n && n<weGes) detail += ' · Deckel für '+n+' von '+weGes+' WE (betroffen)';
+    if(weg) detail += ' · WEG: Basisförderung, Boni ggf. über Zusatzanträge der selbstnutzenden Eigentümer';
     let zus = '–';
     if(kosten && deckel){
       const basis = Math.min(kosten, deckel);
@@ -548,7 +564,10 @@ body.pdfmode .card,body.pdfmode tr,body.pdfmode li{page-break-inside:avoid}
     if(d.q_netz==='ja') w.push('Bei Anschluss- und Benutzungszwang wird nur der Wärmenetzanschluss gefördert, keine eigene Heizung.');
     if(d.q_mehrgeb==='ja') w.push('Mehrere Gebäude an einer Anlage = Gebäudenetz – zuständig ist dann das BAFA, nicht die KfW. Wir prüfen die günstigere Route.');
     if(d.q_vorher==='ja') w.push('Früherer KfW-458-Antrag: Der Kostendeckel gilt einmalig je Wohneinheit – bereits genutzte Beträge stehen nicht erneut zur Verfügung.');
-    if(selbstAngabe && !selbst && (d.einkommen||+d.kinder)) w.push('Bei Vermietung gibt es keine Boni – nur die Grundförderung von 30 %.');
+    if(weg) w.push('WEG (Gemeinschaftseigentum): Der Basisantrag läuft über die Verwaltung. Klimageschwindigkeits- und Einkommensbonus erhalten selbstnutzende Eigentümer nur über einen gesonderten Zusatzantrag – nach der Basis-Zusage, spätestens 6 Monate danach.');
+    if(d.artAntrag==='unternehmen') w.push('Unternehmen, Kommunen und Organisationen werden über das KfW-Programm 459 gefördert, nicht über 458 – bitte sprechen Sie uns an.');
+    if(altBleibt && selbst) w.push('Die bestehende Heizung bleibt in Betrieb: Den Klimageschwindigkeitsbonus gibt es nur, wenn die versorgten Wohneinheiten danach nicht mehr fossil bzw. mit Gas beheizt werden – bei einer Hybridlösung mit der alten Heizung entfällt er.');
+    if(selbstAngabe && !selbst && !weg && (d.einkommen||+d.kinder)) w.push('Bei Vermietung gibt es keine Boni – nur die Grundförderung von 30 %.');
     const wp = (d.neu||[]).some(x=>x.startsWith('WP'));
     if(d.q_protokoll==='nein' && ['gas','biomasse'].includes(d.altTyp)) w.push('Kein Schornsteinfeger-Protokoll vorhanden: Für den Klimageschwindigkeitsbonus muss bei Gas-Zentral- und Biomasseheizungen ein Alter von mindestens 20 Jahren nachgewiesen werden. Bitte das Protokoll beim zuständigen Bezirksschornsteinfeger anfordern – das Typenschild reicht meist nicht aus.');
     if(wp && d.q_imsys && d.q_imsys!=='ja') w.push('Wärmepumpe ohne vorhandenes iMSys: Spätestens bis zur Inbetriebnahme muss ein intelligentes Messsystem beim Messstellenbetreiber bestellt sein – sonst keine Förderung (Details unter Punkt 4).');
@@ -617,15 +636,19 @@ body.pdfmode .card,body.pdfmode tr,body.pdfmode li{page-break-inside:avoid}
     add('Name', [d.anrede,d.vorname,d.nachname].filter(Boolean).join(' '));
     add('Adresse', [d.strasse,d.ort].filter(Boolean).join(', '));
     add('Telefon', d.tel); add('E-Mail', d.email);
+    const artL = {efh:'Privat – Ein-/Zweifamilienhaus',etw:'Privat – Eigentumswohnung',mfh:'Privat – Mehrfamilienhaus',weg:'WEG (Gemeinschaftseigentum)',unternehmen:'Unternehmen/Organisation'};
+    add('Art des Antragstellers', artL[d.artAntrag]);
     L.push('','2) GEBÄUDE');
     add('Objekt', d.objAdresse||'wie oben'); add('Baujahr', d.baujahr);
     add('WE gesamt / davon selbst bewohnt', (d.weGesamt||'?')+' / '+(d.weSelbst!==undefined?d.weSelbst:'?'));
+    add('Vom Heizungstausch betroffene WE', d.weBetroffen || (d.weGesamt ? 'alle' : ''));
     const q = {q_netz:'Wärmenetz-Anschlusszwang',q_mehrgeb:'Mehrere Gebäude',q_vorsteuer:'Vorsteuerabzug',q_vorher:'Früherer 458-Antrag'};
     Object.keys(q).forEach(k=>add(q[k], d[k]));
     if(d.q_vorher==='ja') add('Bereits erhalten', d.vorherBetrag && eur(+d.vorherBetrag));
     L.push('','3) BESTEHENDE HEIZUNG');
     add('Energieträger', labels[d.altTyp]); add('Inbetriebnahme', d.altInbetrieb); add('Schornsteinfeger-Protokoll', d.q_protokoll);
-    add('Funktionstüchtig', d.altFunktion); add('Verbrauch/Jahr', d.verbrauch);
+    add('Hersteller/Typ', d.altHersteller); add('Leistung (kW)', d.altLeistung);
+    add('Funktionstüchtig', d.altFunktion); add('Bleibt in Betrieb (Hybrid)', d.q_altbleibt); add('Verbrauch/Jahr', d.verbrauch);
     add('Heizflächen', d.heizflaechen); add('Warmwasser', d.warmwasser);
     L.push('','4) GEPLANTE HEIZUNG');
     add('Art', (d.neu||[]).join(', ')); add('Hersteller/Modell', d.modell);
